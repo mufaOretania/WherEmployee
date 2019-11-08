@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WherEmployee</string>
+    <string name="bienvenido_a_wheremployee">Bienvenido a WherEmployee</string>
+    <string name="imagen_portada">Imagen portada</string>
+    <string name="acceder_como_jefe">Acceder como jefe</string>
+    <string name="acceder_como_empleado">Acceder como empleado</string>
+    <string name="crear_nueva_empresa">Crear nueva empresa</string>
+    <string name="nueva_empresa">Nueva empresa</string>
+</resources>
