@@ -14,7 +14,7 @@ public class ConexionSqlLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String crearTablaEmpresa = "CREATE TABLE empresa (idEmp INTEGER, nombreEmp TEXT, nombrePropietario TEXT, dniPropietario TEXT, telefono TEXT, direccion TEXT, usuarioJefe TEXT, contraseña TEXT)";
+        String crearTablaEmpresa = "CREATE TABLE empresa (id INTEGER, nombreEmp TEXT, nombrePropietario TEXT, dniPropietario TEXT, telefono TEXT, direccion TEXT, usuarioJefe TEXT, contraseña TEXT, empleados ARRAYLIST)";
         db.execSQL(crearTablaEmpresa);
     }
 

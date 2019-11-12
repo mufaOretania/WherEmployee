@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PrincipalEmpleado">
+    tools:context=".Fichado">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,49 +20,55 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:background="@color/colorAccent"
-            android:text="Empleados"
+            android:text="Sistema de fichado"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="24sp"
             android:textStyle="bold"
             android:visibility="visible"
             tools:ignore="HardcodedText"
-            tools:text="Empleados"
+            tools:text="Sistema de fichado"
             tools:visibility="visible" />
 
-        <Button
-            android:id="@+id/btnFichar"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtJornadaIniciada"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="#80D8FF"
-            android:onClick="fichar"
-            android:padding="32dp"
-            android:text="Fichar"
+            android:text="JORNADA INICIADA"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/txtInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Información"
+            android:textColor="#000000"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/btnEditarEmpleado"
+            android:id="@+id/btnSegundoPlano"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:backgroundTint="#80D8FF"
-            android:onClick="editarEmpleado"
-            android:padding="32dp"
-            android:text="Actualizar datos personales"
+            android:layout_marginTop="32dp"
+            android:onClick="ponerSegundoPlano"
+            android:text="Poner en segundo plano la APP"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/btnAtras"
+            android:id="@+id/btnFinalizarJornada"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:backgroundTint="#80D8FF"
-            android:onClick="atras"
-            android:text="Atrás"
+            android:onClick="finalizarJornada"
+            android:text="Finalizar la jornada laboral"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

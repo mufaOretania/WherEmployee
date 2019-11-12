@@ -1,8 +1,10 @@
 package com.example.wheremployee.Entidades;
 
+import java.util.ArrayList;
+
 public class Empresa {
 
-    private Integer idEmp;
+    private Integer id;
     private String nombreEmp;
     private String nombrePropietario;
     private String dniPropietario;
@@ -10,9 +12,10 @@ public class Empresa {
     private String direccion;
     private String usuarioJefe;
     private String contrasena;
+    private ArrayList<Empleado> empleados;
 
-    public Empresa(Integer idEmp, String nombreEmp, String nombrePropietario, String dniPropietario, String telefono, String direccion, String usuarioJefe, String contrasena) {
-        this.idEmp = idEmp;
+    public Empresa(Integer id, String nombreEmp, String nombrePropietario, String dniPropietario, String telefono, String direccion, String usuarioJefe, String contrasena, ArrayList<Empleado> empleados) {
+        this.id = id;
         this.nombreEmp = nombreEmp;
         this.nombrePropietario = nombrePropietario;
         this.dniPropietario = dniPropietario;
@@ -20,14 +23,23 @@ public class Empresa {
         this.direccion = direccion;
         this.usuarioJefe = usuarioJefe;
         this.contrasena = contrasena;
+        this.empleados = empleados;
     }
 
-    public Integer getIdEmp() {
-        return idEmp;
+    public Integer getIdJefe() {
+        return id;
     }
 
-    public void setIdEmp(Integer idEmp) {
-        this.idEmp = idEmp;
+    public void setIdJefe(Integer idJefe) {
+        this.id = idJefe;
+    }
+
+    public ArrayList<Empleado> getEmpleados() {
+        return empleados;
+    }
+
+    public void setEmpleados(ArrayList<Empleado> empleados) {
+        this.empleados = empleados;
     }
 
     public String getNombreEmp() {

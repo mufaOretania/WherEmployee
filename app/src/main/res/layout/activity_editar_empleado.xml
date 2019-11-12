@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NuevosEmpleados">
+    tools:context=".EditarEmpleado">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,25 +44,6 @@
                     tools:text="Empleados"
                     tools:visibility="visible" />
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="32dp"
-                    tools:ignore="NestedScrolling">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Pepe"
-                            tools:ignore="HardcodedText" />
-                    </LinearLayout>
-                </ScrollView>
 
                 <TextView
                     android:id="@+id/txtNombre"
@@ -166,24 +147,14 @@
                     android:inputType="textPassword"
                     tools:ignore="Autofill,LabelFor" />
 
-                <Button
-                    android:id="@+id/btnAñadir"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:backgroundTint="#80D8FF"
-                    android:onClick="anadirEmpleado"
-                    android:text="Añadir empleado"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
 
                 <Button
-                    android:id="@+id/btnTerminar"
+                    android:id="@+id/btnGuardar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#80D8FF"
-                    android:onClick="terminarEmpresa"
-                    android:text="Terminar empresa"
+                    android:onClick="guardar"
+                    android:text="Guardar"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
@@ -192,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#80D8FF"
-                    android:onClick="atras"
+                    android:onClick="cancelar"
                     android:text="Cancelar"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />

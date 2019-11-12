@@ -6,21 +6,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class PrincipalJefe extends AppCompatActivity {
+public class EditarEmpleado extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_principal_jefe);
+        setContentView(R.layout.activity_editar_empleado);
     }
 
-    public void infoJornadaEmpleado(View v){
-        Intent intent = new Intent (v.getContext(), InfoJornadaEmpleado.class);
+    public void cancelar(View v){
+        Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
         startActivityForResult(intent, 0);
     }
 
-    public void editarEmpresa(View v){
-        Intent intent = new Intent (v.getContext(), EditarEmpresa.class);
+    public void guardar(View v){
+        Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
         startActivityForResult(intent, 0);
     }
+
 }
