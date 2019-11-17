@@ -24,4 +24,8 @@ public class EditarEmpleado extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
+    public void eliminar(View v){
+        Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
+        startActivityForResult(intent, 0);
+    }
 }
