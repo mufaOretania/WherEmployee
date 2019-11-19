@@ -44,6 +44,23 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
+                    android:id="@+id/txtId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Id de la empresa:"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/cajaId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    tools:ignore="Autofill,LabelFor" />
+
+                <TextView
                     android:id="@+id/txtNombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,7 +98,7 @@
                     android:id="@+id/txtDni"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="DNI:"
+                    android:text="Dni:"
                     android:textColor="#000000"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />

@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.wheremployee.Entidades.Empresa;
+
 public class NuevaEmpresa extends AppCompatActivity {
 
     private EditText cajaNombre, cajaNombrePropietario, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
@@ -54,8 +56,8 @@ public class NuevaEmpresa extends AppCompatActivity {
         registro.put("direccion", direccion);
         registro.put("usuarioJefe", nombreUsuario);
         registro.put("contrasena", contrasena);
-        bd.insert("empresa", null, registro);
 
+        long fila = bd.insert("empresa", null, registro);
         bd.close();
 
         cajaNombre.setText("");
@@ -69,7 +71,7 @@ public class NuevaEmpresa extends AppCompatActivity {
         Toast.makeText(this, "Genial, se ha creado su empresa.", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-        //intent.putExtra("idEmpresa", fila.getString(0));
+        //intent.putExtra("id", fila);
         startActivityForResult(intent, 0);
     }
 }
