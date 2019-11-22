@@ -184,7 +184,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:backgroundTint="#80D8FF"
-                    android:onClick="nuevosEmpleados"
+                    android:onClick="crearEmpresa"
                     android:text="Continuar"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />

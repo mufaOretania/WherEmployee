@@ -20,7 +20,11 @@ public class PrincipalJefe extends AppCompatActivity {
     }
 
     public void editarEmpresa(View v){
+        Bundle datos = this.getIntent().getExtras();
+        int idEmpresa = datos.getInt("idEmpr");
+
         Intent intent = new Intent (v.getContext(), EditarEmpresa.class);
+        intent.putExtra("idJefe", idEmpresa);
         startActivityForResult(intent, 0);
     }
 }

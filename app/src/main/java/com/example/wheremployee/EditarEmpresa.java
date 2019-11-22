@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.wheremployee.utilidades.Utilidades;
 
 public class EditarEmpresa extends AppCompatActivity {
 
@@ -27,6 +30,35 @@ public class EditarEmpresa extends AppCompatActivity {
         cajaDireccion = (EditText) findViewById(R.id.cajaDireccion);
         cajaNombreUsuario = (EditText) findViewById(R.id.cajaNombreUsuario);
         cajaContrasena = (EditText) findViewById(R.id.cajaContrasena);
+
+        Bundle datos = this.getIntent().getExtras();
+        int idEmpresa = datos.getInt("idEmpr");
+
+        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
+        SQLiteDatabase bd = con.getWritableDatabase();
+
+        try{
+            String consulta = "SELECT * FROM "+ Utilidades.tablaEmpresa +" WHERE id=" + idEmpresa;
+            Cursor fila = bd.rawQuery(consulta, null);
+
+            cajaId.setText(fila.getString(0));
+            cajaNombre.setText(fila.getString(1));
+            cajaNombrePropietario.setText(fila.getString(2));
+            cajaDni.setText(fila.getString(4));
+            cajaTelefono.setText(fila.getString(5));
+            cajaDireccion.setText(fila.getString(6));
+            cajaNombreUsuario.setText(fila.getString(7));
+            cajaContrasena.setText(fila.getString(8));
+
+            fila.close();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al cargar la página", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent (this, PrincipalJefe.class);
+            startActivityForResult(intent, 0);
+        }
+        bd.close();
     }
 
     public void cancelar(View v){
@@ -48,15 +80,16 @@ public class EditarEmpresa extends AppCompatActivity {
         String nombreUsuario = cajaTelefono.getText().toString();
         String contrasena = cajaContrasena.getText().toString();
 
-        ContentValues registro = new ContentValues();
-        registro.put("nombreEmp", nombre);
-        registro.put("nombrePropietario", nombrePropietario);
-        registro.put("dniPropietario", dni);
-        registro.put("telefono", telefono);
-        registro.put("direccion", direccion);
-        registro.put("usuarioJefe", nombreUsuario);
-        registro.put("contrasena", contrasena);
-        int cant = bd.update("empresa", registro, "id=" + id, null);
+        ContentValues valores = new ContentValues();
+        valores.put("nombreEmp", nombre);
+        valores.put("nombrePropietario", nombrePropietario);
+        valores.put("dniPropietario", dni);
+        valores.put("telefono", telefono);
+        valores.put("direccion", direccion);
+        valores.put("usuarioJefe", nombreUsuario);
+        valores.put("contrasena", contrasena);
+
+        int cant = bd.update(Utilidades.tablaEmpresa, valores, " "+Utilidades.campoIdEmpresa+"=" + id, null);
 
         bd.close();
 

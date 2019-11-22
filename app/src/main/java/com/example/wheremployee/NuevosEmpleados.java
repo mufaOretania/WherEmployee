@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.wheremployee.utilidades.Utilidades;
+
 public class NuevosEmpleados extends AppCompatActivity {
 
     private EditText cajaNombre, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
@@ -47,16 +49,15 @@ public class NuevosEmpleados extends AppCompatActivity {
         String nombreUsuario = cajaTelefono.getText().toString();
         String contrasena = cajaContrasena.getText().toString();
 
-        ContentValues registro = new ContentValues();
-        registro.put("nombreEmp", nombre);
-        registro.put("dniPropietario", dni);
-        registro.put("telefono", telefono);
-        registro.put("direccion", direccion);
-        registro.put("usuarioJefe", nombreUsuario);
-        registro.put("contrasena", contrasena);
+        ContentValues valores = new ContentValues();
+        valores.put(Utilidades.campoNombreEmpl, nombre);
+        valores.put(Utilidades.campoDniEmpl, dni);
+        valores.put(Utilidades.campoTelefonoEmpl, telefono);
+        valores.put(Utilidades.campoDireccionEmpl, direccion);
+        valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
+        valores.put(Utilidades.campoContrasenaEmpl, contrasena);
 
-        long fila = bd.insert("empleado", null, registro);
-        bd.close();
+        long idResultante = bd.insert(Utilidades.tablaEmpleado, Utilidades.campoIdEmpl, valores);
 
         cajaNombre.setText("");
         cajaDni.setText("");
@@ -65,7 +66,14 @@ public class NuevosEmpleados extends AppCompatActivity {
         cajaNombreUsuario.setText("");
         cajaContrasena.setText("");
 
-        Toast.makeText(this, "Genial, se ha creado un nuevo empreado.", Toast.LENGTH_SHORT).show();
+        Bundle datos = this.getIntent().getExtras();
+        int idEmpresa = datos.getInt("idEmpr");
+
+
+
+        Toast.makeText(this, "Genial, se ha creado un nuevo empleado con id: "+ idResultante +". Siga creando empleados, o finalice la empresa.", Toast.LENGTH_SHORT).show();
+
+        bd.close();
 
         llEmpleados.refreshDrawableState();
     }

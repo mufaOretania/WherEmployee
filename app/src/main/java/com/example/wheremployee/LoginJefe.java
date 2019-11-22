@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.wheremployee.utilidades.Utilidades;
+
 public class LoginJefe extends AppCompatActivity {
 
     private EditText cajaNombreUsuario, cajaContrasena;
@@ -36,16 +38,20 @@ public class LoginJefe extends AppCompatActivity {
         String user = cajaNombreUsuario.getText().toString();
         String pass = cajaContrasena.getText().toString();
 
-        String consulta = "SELECT * FROM empresa WHERE nombreUsuario=" + user + " and password=" + pass;
-        Cursor fila = bd.rawQuery(consulta, null);
 
-        if (fila.moveToFirst()) {
+        try{
+            String consulta = "SELECT * FROM "+ Utilidades.tablaEmpresa +" WHERE "+Utilidades.campoUsuario+"=" + user + " and "+Utilidades.campoContrasena+"=" + pass;
+            Cursor fila = bd.rawQuery(consulta, null);
+
             Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
             intent.putExtra("idJefe", fila.getString(0));
             startActivityForResult(intent, 0);
-        } else
+
+            fila.close();
+
+        } catch (Exception e) {
             Toast.makeText(this, "No existe ninguna empresa con ese nombre de usuario y contraseña", Toast.LENGTH_SHORT).show();
-        fila.close();
+        }
         bd.close();
     }
 }

@@ -9,8 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.example.wheremployee.Entidades.Empresa;
+import com.example.wheremployee.utilidades.Utilidades;
 
 public class NuevaEmpresa extends AppCompatActivity {
 
@@ -35,7 +34,7 @@ public class NuevaEmpresa extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
-    public void nuevosEmpleados(View v){
+    public void crearEmpresa(View v){
 
         ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
         SQLiteDatabase bd = con.getWritableDatabase();
@@ -48,30 +47,35 @@ public class NuevaEmpresa extends AppCompatActivity {
         String nombreUsuario = cajaTelefono.getText().toString();
         String contrasena = cajaContrasena.getText().toString();
 
-        ContentValues registro = new ContentValues();
-        registro.put("nombreEmp", nombre);
-        registro.put("nombrePropietario", nombrePropietario);
-        registro.put("dniPropietario", dni);
-        registro.put("telefono", telefono);
-        registro.put("direccion", direccion);
-        registro.put("usuarioJefe", nombreUsuario);
-        registro.put("contrasena", contrasena);
+        ContentValues valores = new ContentValues();
+        valores.put(Utilidades.campoNombreEmp, nombre);
+        valores.put(Utilidades.campoNombreProp, nombrePropietario);
+        valores.put(Utilidades.campoDni, dni);
+        valores.put(Utilidades.campoTelefono, telefono);
+        valores.put(Utilidades.campoDireccion, direccion);
+        valores.put(Utilidades.campoUsuario, nombreUsuario);
+        valores.put(Utilidades.campoContrasena, contrasena);
 
-        long fila = bd.insert("empresa", null, registro);
-        bd.close();
+        try{
+            int idResultante = (int) bd.insert(Utilidades.tablaEmpresa, Utilidades.campoIdEmpresa, valores);
 
-        cajaNombre.setText("");
-        cajaNombrePropietario.setText("");
-        cajaDni.setText("");
-        cajaTelefono.setText("");
-        cajaDireccion.setText("");
-        cajaNombreUsuario.setText("");
-        cajaContrasena.setText("");
+            cajaNombre.setText("");
+            cajaNombrePropietario.setText("");
+            cajaDni.setText("");
+            cajaTelefono.setText("");
+            cajaDireccion.setText("");
+            cajaNombreUsuario.setText("");
+            cajaContrasena.setText("");
 
-        Toast.makeText(this, "Genial, se ha creado su empresa.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Genial, se ha creado su empresacon id: "+ idResultante +". Ahora añade a sus empleados.", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-        //intent.putExtra("id", fila);
-        startActivityForResult(intent, 0);
+            bd.close();
+
+            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            intent.putExtra("idEmpr", idResultante);
+            startActivityForResult(intent, 0);
+        } catch (Exception e) {
+            Toast.makeText(this, e+"", Toast.LENGTH_SHORT).show();
+        }
     }
 }

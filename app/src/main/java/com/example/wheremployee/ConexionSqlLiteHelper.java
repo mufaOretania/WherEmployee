@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.wheremployee.utilidades.Utilidades;
+
 public class ConexionSqlLiteHelper extends SQLiteOpenHelper {
 
     ConexionSqlLiteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -15,44 +17,10 @@ public class ConexionSqlLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String crearTablaEmpresa = "CREATE TABLE IF NOT EXISTS empresa (" +
-                "id INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                "nombreEmp TEXT NOT NULL," +
-                "nombrePropietario TEXT NOT NULL," +
-                "dniPropietario TEXT NOT NULL UNIQUE," +
-                "telefono TEXT NOT NULL," +
-                "direccion TEXT NOT NULL," +
-                "usuarioJefe TEXT NOT NULL," +
-                "contraseña TEXT NOT NULL," +
-                "empleados ARRAYLIST)";
-
-        String crearTablaEmpleado = "CREATE TABLE IF NOT EXISTS empleado (" +
-                "id INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                "nombreEmp TEXT NOT NULL," +
-                "nombrePropietario TEXT NOT NULL," +
-                "dniPropietario TEXT NOT NULL UNIQUE," +
-                "telefono TEXT NOT NULL," +
-                "direccion TEXT NOT NULL," +
-                "usuarioJefe TEXT NOT NULL, " +
-                "contraseña TEXT NOT NULL, " +
-                "jornadas ARRAYLIST)";
-
-
-        String crearTablaJornada = "CREATE TABLE IF NOT EXISTS jornada (" +
-                "id INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                "horaInicio DATE NOT NULL, " +
-                "horaFin DATE NOT NULL, " +
-                "coordenadas ARRAYLIST)";
-
-        String crearTablaCoordenada = "CREATE TABLE IF NOT EXISTS coordenada (" +
-                "id INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                "latitud FLOAT NOT NULL, " +
-                "longitud FLOAT NOT NULL)";
-
-        db.execSQL(crearTablaEmpresa);
-        db.execSQL(crearTablaEmpleado);
-        db.execSQL(crearTablaJornada);
-        db.execSQL(crearTablaCoordenada);
+        db.execSQL(Utilidades.crearTablaEmpresa);
+        db.execSQL(Utilidades.crearTablaEmpleado);
+        db.execSQL(Utilidades.crearTablaJornada);
+        db.execSQL(Utilidades.crearTablaCoordenada);
     }
 
     @Override
