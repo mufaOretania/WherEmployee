@@ -8,6 +8,9 @@ import android.view.View;
 
 public class PrincipalEmpleado extends AppCompatActivity {
 
+    Bundle datos = this.getIntent().getExtras();
+    int idEmpleado = datos.getInt("idEmpleado");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,11 +24,13 @@ public class PrincipalEmpleado extends AppCompatActivity {
 
     public void editarEmpleado(View v){
         Intent intent = new Intent (v.getContext(), EditarEmpleado.class);
+        intent.putExtra("idEmpleado", idEmpleado);
         startActivityForResult(intent, 0);
     }
 
     public void fichar(View v){
         Intent intent = new Intent (v.getContext(), Fichado.class);
+        intent.putExtra("idEmpleado", idEmpleado);
         startActivityForResult(intent, 0);
     }
 }

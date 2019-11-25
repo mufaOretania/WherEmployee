@@ -32,14 +32,16 @@ public class LoginJefe extends AppCompatActivity {
 
     public void login(View v){
 
-        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-        SQLiteDatabase bd = con.getWritableDatabase();
-
-        String user = cajaNombreUsuario.getText().toString();
-        String pass = cajaContrasena.getText().toString();
-
-
         try{
+
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
+            SQLiteDatabase bd = con.getWritableDatabase();
+
+            String user = cajaNombreUsuario.getText().toString();
+            String pass = cajaContrasena.getText().toString();
+
+
+
             String consulta = "SELECT * FROM "+ Utilidades.tablaEmpresa +" WHERE "+Utilidades.campoUsuario+"=" + user + " and "+Utilidades.campoContrasena+"=" + pass;
             Cursor fila = bd.rawQuery(consulta, null);
 
@@ -48,10 +50,11 @@ public class LoginJefe extends AppCompatActivity {
             startActivityForResult(intent, 0);
 
             fila.close();
+            bd.close();
 
         } catch (Exception e) {
             Toast.makeText(this, "No existe ninguna empresa con ese nombre de usuario y contraseña", Toast.LENGTH_SHORT).show();
         }
-        bd.close();
+
     }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wheremployee.utilidades.Utilidades;
@@ -39,47 +40,58 @@ public class NuevosEmpleados extends AppCompatActivity {
     }
 
     public void anadirEmpleado(View v){
-        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-        SQLiteDatabase bd = con.getWritableDatabase();
 
-        String nombre = cajaNombre.getText().toString();
-        String dni = cajaDni.getText().toString();
-        String telefono = cajaTelefono.getText().toString();
-        String direccion = cajaTelefono.getText().toString();
-        String nombreUsuario = cajaTelefono.getText().toString();
-        String contrasena = cajaContrasena.getText().toString();
+        long idResultante = 0;
 
-        ContentValues valores = new ContentValues();
-        valores.put(Utilidades.campoNombreEmpl, nombre);
-        valores.put(Utilidades.campoDniEmpl, dni);
-        valores.put(Utilidades.campoTelefonoEmpl, telefono);
-        valores.put(Utilidades.campoDireccionEmpl, direccion);
-        valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
-        valores.put(Utilidades.campoContrasenaEmpl, contrasena);
+        try {
 
-        long idResultante = bd.insert(Utilidades.tablaEmpleado, Utilidades.campoIdEmpl, valores);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
+            SQLiteDatabase bd = con.getWritableDatabase();
 
-        cajaNombre.setText("");
-        cajaDni.setText("");
-        cajaTelefono.setText("");
-        cajaDireccion.setText("");
-        cajaNombreUsuario.setText("");
-        cajaContrasena.setText("");
+            String nombre = cajaNombre.getText().toString();
+            String nombreLista = nombre;
+            String dni = cajaDni.getText().toString();
+            String telefono = cajaTelefono.getText().toString();
+            String direccion = cajaTelefono.getText().toString();
+            String nombreUsuario = cajaTelefono.getText().toString();
+            String contrasena = cajaContrasena.getText().toString();
 
-        Bundle datos = this.getIntent().getExtras();
-        int idEmpresa = datos.getInt("idEmpr");
+            ContentValues valores = new ContentValues();
+            valores.put(Utilidades.campoNombreEmpl, nombre);
+            valores.put(Utilidades.campoDniEmpl, dni);
+            valores.put(Utilidades.campoTelefonoEmpl, telefono);
+            valores.put(Utilidades.campoDireccionEmpl, direccion);
+            valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
+            valores.put(Utilidades.campoContrasenaEmpl, contrasena);
 
+            idResultante = bd.insert(Utilidades.tablaEmpleado, Utilidades.campoIdEmpl, valores);
 
+            cajaNombre.setText("");
+            cajaDni.setText("");
+            cajaTelefono.setText("");
+            cajaDireccion.setText("");
+            cajaNombreUsuario.setText("");
+            cajaContrasena.setText("");
 
-        Toast.makeText(this, "Genial, se ha creado un nuevo empleado con id: "+ idResultante +". Siga creando empleados, o finalice la empresa.", Toast.LENGTH_SHORT).show();
+            Bundle datos = this.getIntent().getExtras();
+            int idEmpresa = datos.getInt("idEmpr");
 
-        bd.close();
+            //Actuzalizar campo de empleados de la tabla empresa.
 
-        llEmpleados.refreshDrawableState();
+            bd.close();
+
+            TextView tvAñadir = new TextView(getApplicationContext());
+            tvAñadir.setText(nombreLista);
+
+            llEmpleados.addView(tvAñadir);
+
+        } catch(Exception e){
+            Toast.makeText(this, "Genial, se ha creado un nuevo empleado con id: " + idResultante + ". Siga creando empleados, o finalice la empresa.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void terminarEmpresa(View v){
-        Intent intent = new Intent (v.getContext(), MainActivity.class);
+        Intent intent = new Intent (v.getContext(), LoginJefe.class);
         startActivityForResult(intent, 0);
     }
 }

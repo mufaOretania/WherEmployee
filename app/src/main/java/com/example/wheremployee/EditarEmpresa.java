@@ -17,6 +17,9 @@ public class EditarEmpresa extends AppCompatActivity {
 
     private EditText cajaId, cajaNombre, cajaNombrePropietario, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
 
+    Bundle datos = this.getIntent().getExtras();
+    int idEmpresa = datos.getInt("idEmpr");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +34,6 @@ public class EditarEmpresa extends AppCompatActivity {
         cajaNombreUsuario = (EditText) findViewById(R.id.cajaNombreUsuario);
         cajaContrasena = (EditText) findViewById(R.id.cajaContrasena);
 
-        Bundle datos = this.getIntent().getExtras();
-        int idEmpresa = datos.getInt("idEmpr");
-
         ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
         SQLiteDatabase bd = con.getWritableDatabase();
 
@@ -44,21 +44,22 @@ public class EditarEmpresa extends AppCompatActivity {
             cajaId.setText(fila.getString(0));
             cajaNombre.setText(fila.getString(1));
             cajaNombrePropietario.setText(fila.getString(2));
-            cajaDni.setText(fila.getString(4));
-            cajaTelefono.setText(fila.getString(5));
-            cajaDireccion.setText(fila.getString(6));
-            cajaNombreUsuario.setText(fila.getString(7));
-            cajaContrasena.setText(fila.getString(8));
+            cajaDni.setText(fila.getString(3));
+            cajaTelefono.setText(fila.getString(4));
+            cajaDireccion.setText(fila.getString(5));
+            cajaNombreUsuario.setText(fila.getString(6));
+            cajaContrasena.setText(fila.getString(7));
 
             fila.close();
+            bd.close();
 
         } catch (Exception e) {
-            Toast.makeText(this, "Error al cargar la página", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al cargar la página los datos de la empresa", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent (this, PrincipalJefe.class);
             startActivityForResult(intent, 0);
         }
-        bd.close();
+
     }
 
     public void cancelar(View v){
@@ -68,68 +69,86 @@ public class EditarEmpresa extends AppCompatActivity {
 
     public void guardar(View v){
 
-        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-        SQLiteDatabase bd = con.getWritableDatabase();
+        try {
 
-        String id = cajaId.getText().toString();
-        String nombre = cajaNombre.getText().toString();
-        String nombrePropietario = cajaNombrePropietario.getText().toString();
-        String dni = cajaDni.getText().toString();
-        String telefono = cajaTelefono.getText().toString();
-        String direccion = cajaTelefono.getText().toString();
-        String nombreUsuario = cajaTelefono.getText().toString();
-        String contrasena = cajaContrasena.getText().toString();
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
+            SQLiteDatabase bd = con.getWritableDatabase();
 
-        ContentValues valores = new ContentValues();
-        valores.put("nombreEmp", nombre);
-        valores.put("nombrePropietario", nombrePropietario);
-        valores.put("dniPropietario", dni);
-        valores.put("telefono", telefono);
-        valores.put("direccion", direccion);
-        valores.put("usuarioJefe", nombreUsuario);
-        valores.put("contrasena", contrasena);
+            String id = cajaId.getText().toString();
+            String nombre = cajaNombre.getText().toString();
+            String nombrePropietario = cajaNombrePropietario.getText().toString();
+            String dni = cajaDni.getText().toString();
+            String telefono = cajaTelefono.getText().toString();
+            String direccion = cajaDireccion.getText().toString();
+            String nombreUsuario = cajaNombreUsuario.getText().toString();
+            String contrasena = cajaContrasena.getText().toString();
 
-        int cant = bd.update(Utilidades.tablaEmpresa, valores, " "+Utilidades.campoIdEmpresa+"=" + id, null);
+            ContentValues valores = new ContentValues();
+            valores.put(Utilidades.campoNombreEmp, nombre);
+            valores.put(Utilidades.campoNombreProp, nombrePropietario);
+            valores.put(Utilidades.campoDni, dni);
+            valores.put(Utilidades.campoTelefono, telefono);
+            valores.put(Utilidades.campoDireccion, direccion);
+            valores.put(Utilidades.campoUsuario, nombreUsuario);
+            valores.put(Utilidades.campoContrasena, contrasena);
 
-        bd.close();
+            int cant = bd.update(Utilidades.tablaEmpresa, valores, " " + Utilidades.campoIdEmpresa + "=" + id, null);
 
-        if (cant == 1) {
-            Toast.makeText(this, "Se modificaron los datos de la empresa", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "Error. Imposible actualizar los datos de la empresa.", Toast.LENGTH_SHORT).show();
+            bd.close();
+
+            if (cant == 1) {
+                Toast.makeText(this, "Se modificaron los datos de la empresa", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error. Imposible actualizar los datos de la empresa.", Toast.LENGTH_SHORT).show();
+            }
+
+            Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            startActivityForResult(intent, 0);
+
+        } catch( Exception e) {
+            Toast.makeText(this, "Se produjo un error al editar los datos de la empresa", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            startActivityForResult(intent, 0);
         }
-
-        Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
-        startActivityForResult(intent, 0);
     }
 
     public void eliminar(View v){
 
-        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-        SQLiteDatabase bd = con.getWritableDatabase();
+        try {
 
-        String id = cajaId.getText().toString();
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
+            SQLiteDatabase bd = con.getWritableDatabase();
 
-        int cant = bd.delete("empresa", "id=" + id, null);
+            String id = cajaId.getText().toString();
 
-        bd.close();
+            int cant = bd.delete("empresa", "id=" + id, null);
 
-        cajaId.setText("");
-        cajaNombre.setText("");
-        cajaNombrePropietario.setText("");
-        cajaDni.setText("");
-        cajaTelefono.setText("");
-        cajaDireccion.setText("");
-        cajaNombreUsuario.setText("");
-        cajaContrasena.setText("");
+            bd.close();
 
-        if (cant == 1) {
-            Toast.makeText(this, "Se eliminó la empresa correctamente", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "No se pudó eliminar la empresa", Toast.LENGTH_SHORT).show();
+            cajaId.setText("");
+            cajaNombre.setText("");
+            cajaNombrePropietario.setText("");
+            cajaDni.setText("");
+            cajaTelefono.setText("");
+            cajaDireccion.setText("");
+            cajaNombreUsuario.setText("");
+            cajaContrasena.setText("");
+
+            if (cant == 1) {
+                Toast.makeText(this, "Se eliminó la empresa correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "No se pudó eliminar la empresa", Toast.LENGTH_SHORT).show();
+            }
+
+            Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            startActivityForResult(intent, 0);
+
+        }catch (Exception e){
+            Toast.makeText(this, "Se produjo un error al eliminar la empresa", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            startActivityForResult(intent, 0);
         }
-
-        Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
-        startActivityForResult(intent, 0);
     }
 }

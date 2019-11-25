@@ -159,16 +159,6 @@
                     tools:ignore="HardcodedText" />
 
                 <Button
-                    android:id="@+id/btnBorrar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#80D8FF"
-                    android:onClick="eliminar"
-                    android:text="Eliminar empleado"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
-
-                <Button
                     android:id="@+id/btnCancelar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

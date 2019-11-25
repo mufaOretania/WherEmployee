@@ -29,22 +29,31 @@ public class LoginEmpleado extends AppCompatActivity {
     }
 
     public void login(View v){
-        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-        SQLiteDatabase bd = con.getWritableDatabase();
 
-        String user = cajaNombreUsuario.getText().toString();
-        String pass = cajaContrasena.getText().toString();
+        try {
 
-        String consulta = "SELECT * FROM empleado WHERE nombreUsuario=" + user + " and password=" + pass;
-        Cursor fila = bd.rawQuery(consulta, null);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
+            SQLiteDatabase bd = con.getWritableDatabase();
 
-        if (fila.moveToFirst()) {
-            Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
-            intent.putExtra("idEmpleado", fila.getString(0));
-            startActivityForResult(intent, 0);
-        } else
+            String user = cajaNombreUsuario.getText().toString();
+            String pass = cajaContrasena.getText().toString();
+
+            String consulta = "SELECT * FROM empleado WHERE nombreUsuario=" + user + " and password=" + pass;
+            Cursor fila = bd.rawQuery(consulta, null);
+
+            if (fila.moveToFirst()) {
+                String idEmpleado =  fila.getString(0);
+
+                fila.close();
+                bd.close();
+
+                Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
+                intent.putExtra("idEmpleado", idEmpleado);
+                startActivityForResult(intent, 0);
+            }
+
+        }catch (Exception e){
             Toast.makeText(this, "No existe ningún empleado con ese nombre de usuario y contraseña", Toast.LENGTH_SHORT).show();
-        fila.close();
-        bd.close();
+        }
     }
 }

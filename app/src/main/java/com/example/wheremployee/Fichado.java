@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+
 public class Fichado extends AppCompatActivity {
+
+    //Capturo la hora y las coordenadas.
+    //Sigo capturando todas las coordenadas necesarias.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
