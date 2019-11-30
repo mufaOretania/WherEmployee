@@ -14,6 +14,7 @@ import com.example.wheremployee.utilidades.Utilidades;
 public class NuevaEmpresa extends AppCompatActivity {
 
     private EditText cajaNombre, cajaNombrePropietario, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
+    long idEmpresa = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,43 +40,55 @@ public class NuevaEmpresa extends AppCompatActivity {
         ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
         SQLiteDatabase bd = con.getWritableDatabase();
 
-        String nombre = cajaNombre.getText().toString();
-        String nombrePropietario = cajaNombrePropietario.getText().toString();
-        String dni = cajaDni.getText().toString();
-        String telefono = cajaTelefono.getText().toString();
-        String direccion = cajaTelefono.getText().toString();
-        String nombreUsuario = cajaTelefono.getText().toString();
-        String contrasena = cajaContrasena.getText().toString();
+        ContentValues valores = null;
 
-        ContentValues valores = new ContentValues();
-        valores.put(Utilidades.campoNombreEmp, nombre);
-        valores.put(Utilidades.campoNombreProp, nombrePropietario);
-        valores.put(Utilidades.campoDni, dni);
-        valores.put(Utilidades.campoTelefono, telefono);
-        valores.put(Utilidades.campoDireccion, direccion);
-        valores.put(Utilidades.campoUsuario, nombreUsuario);
-        valores.put(Utilidades.campoContrasena, contrasena);
+        try {
+            String nombre = cajaNombre.getText().toString();
+            String nombrePropietario = cajaNombrePropietario.getText().toString();
+            String dni = cajaDni.getText().toString();
+            String telefono = cajaTelefono.getText().toString();
+            String direccion = cajaTelefono.getText().toString();
+            String nombreUsuario = cajaTelefono.getText().toString();
+            String contrasena = cajaContrasena.getText().toString();
+
+            valores = new ContentValues();
+            valores.put(Utilidades.campoNombreEmp, nombre);
+            valores.put(Utilidades.campoNombreProp, nombrePropietario);
+            valores.put(Utilidades.campoDni, dni);
+            valores.put(Utilidades.campoTelefono, telefono);
+            valores.put(Utilidades.campoDireccion, direccion);
+            valores.put(Utilidades.campoUsuario, nombreUsuario);
+            valores.put(Utilidades.campoContrasena, contrasena);
+
+        } catch (Exception e){
+            Toast.makeText(this, "Error al capturar los datos de los campos.", Toast.LENGTH_SHORT).show();
+        }
 
         try{
-            int idResultante = (int) bd.insert(Utilidades.tablaEmpresa, Utilidades.campoIdEmpresa, valores);
-
-            cajaNombre.setText("");
-            cajaNombrePropietario.setText("");
-            cajaDni.setText("");
-            cajaTelefono.setText("");
-            cajaDireccion.setText("");
-            cajaNombreUsuario.setText("");
-            cajaContrasena.setText("");
-
-            Toast.makeText(this, "Genial, se ha creado su empresacon id: "+ idResultante +". Ahora añade a sus empleados.", Toast.LENGTH_SHORT).show();
-
-            bd.close();
-
-            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-            intent.putExtra("idEmpr", idResultante);
-            startActivityForResult(intent, 0);
+            idEmpresa = bd.insert(Utilidades.tablaEmpresa, null, valores);
         } catch (Exception e) {
-            Toast.makeText(this, e+"", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al insertar la empresa en la base de datos.", Toast.LENGTH_SHORT).show();
+        }
+
+        cajaNombre.setText("");
+        cajaNombrePropietario.setText("");
+        cajaDni.setText("");
+        cajaTelefono.setText("");
+        cajaDireccion.setText("");
+        cajaNombreUsuario.setText("");
+        cajaContrasena.setText("");
+
+        bd.close();
+
+        Toast.makeText(this, "Genial, se ha creado su empresa con id: "+ idEmpresa +".", Toast.LENGTH_LONG).show();
+
+        try{
+            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            intent.putExtra("idEmpresa", idEmpresa);
+            startActivityForResult(intent, 0);
+        } catch (Exception e){
+            Toast.makeText(this, "Error, no se pudo redireccionar a la ventana de insercción de empleados..", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

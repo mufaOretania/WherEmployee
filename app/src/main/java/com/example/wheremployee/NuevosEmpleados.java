@@ -18,6 +18,7 @@ public class NuevosEmpleados extends AppCompatActivity {
 
     private EditText cajaNombre, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
     private LinearLayout llEmpleados;
+    int idEmpresa = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,11 @@ public class NuevosEmpleados extends AppCompatActivity {
         cajaContrasena = (EditText) findViewById(R.id.cajaContrasena);
 
         llEmpleados = (LinearLayout) findViewById(R.id.llEmpleados);
+
+        Bundle datos = this.getIntent().getExtras();
+        if(datos != null){
+            idEmpresa = datos.getInt("idEmpresa");
+        }
     }
 
     public void atras(View v){
@@ -49,7 +55,6 @@ public class NuevosEmpleados extends AppCompatActivity {
             SQLiteDatabase bd = con.getWritableDatabase();
 
             String nombre = cajaNombre.getText().toString();
-            String nombreLista = nombre;
             String dni = cajaDni.getText().toString();
             String telefono = cajaTelefono.getText().toString();
             String direccion = cajaTelefono.getText().toString();
@@ -63,8 +68,9 @@ public class NuevosEmpleados extends AppCompatActivity {
             valores.put(Utilidades.campoDireccionEmpl, direccion);
             valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
             valores.put(Utilidades.campoContrasenaEmpl, contrasena);
+            valores.put(Utilidades.campoEmpresa, idEmpresa);
 
-            idResultante = bd.insert(Utilidades.tablaEmpleado, Utilidades.campoIdEmpl, valores);
+            idResultante = bd.insert(Utilidades.tablaEmpleado, null, valores);
 
             cajaNombre.setText("");
             cajaDni.setText("");
@@ -73,25 +79,23 @@ public class NuevosEmpleados extends AppCompatActivity {
             cajaNombreUsuario.setText("");
             cajaContrasena.setText("");
 
-            Bundle datos = this.getIntent().getExtras();
-            int idEmpresa = datos.getInt("idEmpr");
-
-            //Actuzalizar campo de empleados de la tabla empresa.
-
             bd.close();
 
             TextView tvAñadir = new TextView(getApplicationContext());
-            tvAñadir.setText(nombreLista);
+            tvAñadir.setText(nombre);
 
             llEmpleados.addView(tvAñadir);
 
-        } catch(Exception e){
             Toast.makeText(this, "Genial, se ha creado un nuevo empleado con id: " + idResultante + ". Siga creando empleados, o finalice la empresa.", Toast.LENGTH_SHORT).show();
+
+        } catch(Exception e){
+            Toast.makeText(this, "Error al insertar al empleado.", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void terminarEmpresa(View v){
         Intent intent = new Intent (v.getContext(), LoginJefe.class);
+        intent.putExtra("idEmpresa", idEmpresa);
         startActivityForResult(intent, 0);
     }
 }
