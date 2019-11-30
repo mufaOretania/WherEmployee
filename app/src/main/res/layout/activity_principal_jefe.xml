@@ -59,6 +59,7 @@
                     tools:ignore="NestedScrolling">
 
                     <LinearLayout
+                        android:id="@+id/llEmpleados"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -67,8 +68,8 @@
                             android:id="@+id/textView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Pepe"
                             android:clickable="true"
+                            android:text="Pepe"
                             tools:ignore="HardcodedText,UnusedAttribute" />
                     </LinearLayout>
                 </ScrollView>

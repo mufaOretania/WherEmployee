@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,8 +17,11 @@ import com.example.wheremployee.utilidades.Utilidades;
 public class PrincipalJefe extends AppCompatActivity {
 
     int idEmpresa = 0;
+    int idEmpleado = 0;
 
     private TextView tv;
+    private LinearLayout ll;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -31,6 +35,7 @@ public class PrincipalJefe extends AppCompatActivity {
         }
 
         tv = (TextView) findViewById(R.id.tvPortada);
+        ll = (LinearLayout) findViewById(R.id.llEmpleados);
 
         try{
 
@@ -44,10 +49,41 @@ public class PrincipalJefe extends AppCompatActivity {
             String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
             Cursor fila = bd.rawQuery(consulta, args);
 
-            tv.setText("Empresa " + fila.getString(0));
+            String[] argsEmpl = new String[] {idEmpresaString};
 
-            //Añadir empleados al LinearLayout después de obtener los empleados de la tabla empresa.
-            //Después crear bucle para añadirle a todos los elementos empleados un evento onClick para lanzar la actividad información del empleado con su id de empleado.
+            String consultaEmpl = "SELECT "+ Utilidades.campoIdEmpl+ "," + Utilidades.campoNombreEmpl +" FROM "+ Utilidades.tablaEmpleado +" WHERE "+ Utilidades.campoEmpresa + "=?";
+            Cursor filaEmpl = bd.rawQuery(consultaEmpl, argsEmpl);
+
+            if(filaEmpl.moveToFirst()){
+                TextView tvAñadirEmpleados = new TextView(getApplicationContext());
+                idEmpleado = filaEmpl.getInt(0);
+                tvAñadirEmpleados.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent (v.getContext(), InfoJornadaEmpleado.class);
+                        intent.putExtra("idEmpleado", idEmpleado);
+                        startActivityForResult(intent, 0);
+                    }
+                });
+                tvAñadirEmpleados.setText(filaEmpl.getString(1));
+
+                ll.addView(tvAñadirEmpleados);
+                while(filaEmpl.moveToNext()){
+                    TextView tvAñadirEmpleados2 = new TextView(getApplicationContext());
+                    idEmpleado = filaEmpl.getInt(0);
+                    tvAñadirEmpleados2.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent (v.getContext(), InfoJornadaEmpleado.class);
+                            intent.putExtra("idEmpleado", idEmpleado);
+                            startActivityForResult(intent, 0);
+                        }
+                    });
+                    tvAñadirEmpleados.setText(filaEmpl.getString(1));
+
+                    ll.addView(tvAñadirEmpleados);
+                }
+            }
 
             fila.close();
             bd.close();
@@ -55,11 +91,6 @@ public class PrincipalJefe extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "No existe ninguna empresa con ese nombre de usuario y contraseña", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void infoJornadaEmpleado(View v){
-        Intent intent = new Intent (v.getContext(), InfoJornadaEmpleado.class);
-        startActivityForResult(intent, 0);
     }
 
     public void editarEmpresa(View v){
