@@ -47,30 +47,46 @@ public class NuevosEmpleados extends AppCompatActivity {
 
     public void anadirEmpleado(View v){
 
-        long idResultante = 0;
+        long idEmpleado = 0;
+        String nombreEmpleado = null;
 
         try {
 
             ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
             SQLiteDatabase bd = con.getWritableDatabase();
 
-            String nombre = cajaNombre.getText().toString();
-            String dni = cajaDni.getText().toString();
-            String telefono = cajaTelefono.getText().toString();
-            String direccion = cajaTelefono.getText().toString();
-            String nombreUsuario = cajaTelefono.getText().toString();
-            String contrasena = cajaContrasena.getText().toString();
+            ContentValues valores = null;
 
-            ContentValues valores = new ContentValues();
-            valores.put(Utilidades.campoNombreEmpl, nombre);
-            valores.put(Utilidades.campoDniEmpl, dni);
-            valores.put(Utilidades.campoTelefonoEmpl, telefono);
-            valores.put(Utilidades.campoDireccionEmpl, direccion);
-            valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
-            valores.put(Utilidades.campoContrasenaEmpl, contrasena);
-            valores.put(Utilidades.campoEmpresa, idEmpresa);
+            try{
 
-            idResultante = bd.insert(Utilidades.tablaEmpleado, null, valores);
+                String nombre = cajaNombre.getText().toString();
+                nombreEmpleado = nombre;
+                String dni = cajaDni.getText().toString();
+                String telefono = cajaTelefono.getText().toString();
+                String direccion = cajaTelefono.getText().toString();
+                String nombreUsuario = cajaTelefono.getText().toString();
+                String contrasena = cajaContrasena.getText().toString();
+
+                valores.put(Utilidades.campoNombreEmpl, nombre);
+                valores.put(Utilidades.campoDniEmpl, dni);
+                valores.put(Utilidades.campoTelefonoEmpl, telefono);
+                valores.put(Utilidades.campoDireccionEmpl, direccion);
+                valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
+                valores.put(Utilidades.campoContrasenaEmpl, contrasena);
+                valores.put(Utilidades.campoEmpresa, idEmpresa);
+
+            } catch (Exception e){
+                Toast.makeText(this, "Error al capturar los datos de los campos.", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+                startActivityForResult(intent, 0);
+            }
+
+            try{
+                idEmpleado = bd.insert(Utilidades.tablaEmpresa, Utilidades.campoIdEmpresa, valores);
+            } catch (Exception e) {
+                Toast.makeText(this, "Error el empleado en la base de datos.", Toast.LENGTH_SHORT).show();
+            }
 
             cajaNombre.setText("");
             cajaDni.setText("");
@@ -82,11 +98,11 @@ public class NuevosEmpleados extends AppCompatActivity {
             bd.close();
 
             TextView tvAñadir = new TextView(getApplicationContext());
-            tvAñadir.setText(nombre);
+            tvAñadir.setText(nombreEmpleado);
 
             llEmpleados.addView(tvAñadir);
 
-            Toast.makeText(this, "Genial, se ha creado un nuevo empleado con id: " + idResultante + ". Siga creando empleados, o finalice la empresa.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Genial, se ha creado un nuevo empleado con id: " + idEmpleado + ". Siga creando empleados, o finalice la empresa.", Toast.LENGTH_SHORT).show();
 
         } catch(Exception e){
             Toast.makeText(this, "Error al insertar al empleado.", Toast.LENGTH_SHORT).show();

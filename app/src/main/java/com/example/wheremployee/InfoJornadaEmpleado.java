@@ -18,8 +18,7 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
     private MapView map = null;
     private TextView txtInfo = null;
 
-    Bundle datos = this.getIntent().getExtras();
-    int idEmpleado = datos.getInt("idEmpleado");
+    int idEmpleado = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,21 +28,48 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
         map = (MapView) findViewById(R.id.mapView);
         txtInfo = (TextView) findViewById(R.id.txtInfo);
 
+        Bundle datos = this.getIntent().getExtras();
+        if(datos != null){
+            idEmpleado = datos.getInt("idEmpleado");
+        }
+
         try{
 
             ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
             SQLiteDatabase bd = con.getWritableDatabase();
 
-            String consulta = "SELECT * FROM "+ Utilidades.tablaEmpleado +" WHERE "+ Utilidades.campoIdEmpl + "=" + idEmpleado;
-            Cursor fila = bd.rawQuery(consulta, null);
+            String idEmpleadoString = idEmpleado+"";
+            String[] args = new String[] {idEmpleadoString};
+            String[] camposDevueltos = new String[] {Utilidades.campoNombreEmpl, Utilidades.campoDniEmpl, Utilidades.campoTelefonoEmpl, Utilidades.campoDireccionEmpl, Utilidades.campoUsuarioEmpl, Utilidades.campoContrasenaEmpl};
 
-            // Añadir el información al textview información, y añadir coordenadas al mapa de google.
+            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+            Cursor fila = bd.query(Utilidades.tablaEmpleado, camposDevueltos, Utilidades.campoIdEmpl+"=? " , args, null, null, null);
+
+            String[] argsJornada = new String[] {idEmpleadoString};
+            String[] camposDevueltosJornada = new String[] {Utilidades.campoIdJor};
+
+            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+            Cursor filaJornada = bd.query(Utilidades.tablaEmpleado, camposDevueltosJornada, Utilidades.campoIdEmpl+"=? " , argsJornada, "DESCENDENT", null, null);
+
+            int idJornada = filaJornada.getInt(0);
+            String idJornadaString = idJornada+"";
+
+            String cadena = fila.getString(0)+"\n"+fila.getString(1)+"\n"+fila.getString(2)+"\n"+fila.getString(3)+"\n"+fila.getString(4)+"\n"+fila.getString(5);
+            txtInfo.setText(cadena);
+
+            String[] argsCoor = new String[] {idEmpleadoString, idJornadaString};
+            String[] camposDevueltosCoor = new String[] {Utilidades.campolongitud, Utilidades.campolatitud};
+
+            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+            Cursor filaCoor = bd.query(Utilidades.tablaEmpleado, camposDevueltosCoor, Utilidades.campoEmpleadoCoor+"=? and "+ Utilidades.campoJornada+"=?" , argsCoor, null, null, null);
+
+            //Añadir aquí las coordenadas al mapa
 
             fila.close();
             bd.close();
 
         } catch (Exception e) {
-            Toast.makeText(this, "No existe ninguna empresa con ese nombre de usuario y contraseña", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se encontro información acerca de este empleado.", Toast.LENGTH_SHORT).show();
         }
 
 

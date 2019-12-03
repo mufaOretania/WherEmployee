@@ -64,12 +64,14 @@ public class Utilidades {
     public static final String campoIdCoor = "id";
     public static final String campolatitud = "latitud";
     public static final String campolongitud = "longitud";
+    public static final String campoEmpleadoCoor = "empleadoCoor";
     public static final String campoJornada = "jornada";
 
     public static final String crearTablaCoordenada = "CREATE TABLE IF NOT EXISTS "+tablaCoordenada+" (" +
             ""+campoIdCoor+" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
             ""+campolatitud+" FLOAT NOT NULL, " +
             ""+campolongitud+" FLOAT NOT NULL, " +
+            ""+campoEmpleadoCoor+" INTEGER NOT NULL, " +
             ""+campoJornada+" INTEGER NOT NULL)";
 
 }

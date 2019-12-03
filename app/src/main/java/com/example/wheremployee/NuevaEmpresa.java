@@ -60,12 +60,18 @@ public class NuevaEmpresa extends AppCompatActivity {
             valores.put(Utilidades.campoUsuario, nombreUsuario);
             valores.put(Utilidades.campoContrasena, contrasena);
 
+            String digitos = dni.substring(0, 7);
+            String letra = dni.substring(8);
+
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los campos.", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
+            startActivityForResult(intent, 0);
         }
 
         try{
-            idEmpresa = bd.insert(Utilidades.tablaEmpresa, null, valores);
+            idEmpresa = bd.insert(Utilidades.tablaEmpresa, Utilidades.campoIdEmpresa, valores);
         } catch (Exception e) {
             Toast.makeText(this, "Error al insertar la empresa en la base de datos.", Toast.LENGTH_SHORT).show();
         }
@@ -80,15 +86,19 @@ public class NuevaEmpresa extends AppCompatActivity {
 
         bd.close();
 
-        Toast.makeText(this, "Genial, se ha creado su empresa con id: "+ idEmpresa +".", Toast.LENGTH_LONG).show();
+        if(idEmpresa == -1){
+            Toast.makeText(this, "Error al crear la empresa.", Toast.LENGTH_SHORT).show();
 
-        try{
+            Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
+            startActivityForResult(intent, 0);
+        } else {
+            Toast.makeText(this, "Genial, se ha creado su empresa con id: "+ idEmpresa +".", Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
-        } catch (Exception e){
-            Toast.makeText(this, "Error, no se pudo redireccionar a la ventana de insercción de empleados..", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

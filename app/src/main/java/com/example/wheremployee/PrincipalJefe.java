@@ -19,11 +19,10 @@ public class PrincipalJefe extends AppCompatActivity {
     int idEmpresa = 0;
     int idEmpleado = 0;
 
-    private TextView tv;
+    private TextView tvPortada;
     private LinearLayout ll;
 
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +33,7 @@ public class PrincipalJefe extends AppCompatActivity {
             idEmpresa = datos.getInt("idEmpresa");
         }
 
-        tv = (TextView) findViewById(R.id.tvPortada);
+        tvPortada = (TextView) findViewById(R.id.tvPortada);
         ll = (LinearLayout) findViewById(R.id.llEmpleados);
 
         try{
@@ -43,16 +42,19 @@ public class PrincipalJefe extends AppCompatActivity {
             SQLiteDatabase bd = con.getWritableDatabase();
 
             String idEmpresaString = idEmpresa+"";
-
             String[] args = new String[] {idEmpresaString};
+            String[] camposDevueltos = new String[] {Utilidades.campoNombreEmp};
 
-            String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
-            Cursor fila = bd.rawQuery(consulta, args);
+            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+            Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoIdEmpresa+"=? " , args, null, null, null);
+
+            tvPortada.setText(fila.getString(0));
 
             String[] argsEmpl = new String[] {idEmpresaString};
+            String[] camposDevueltosEmpl = new String[] {Utilidades.campoIdEmpl, Utilidades.campoNombreEmpl};
 
-            String consultaEmpl = "SELECT "+ Utilidades.campoIdEmpl+ "," + Utilidades.campoNombreEmpl +" FROM "+ Utilidades.tablaEmpleado +" WHERE "+ Utilidades.campoEmpresa + "=?";
-            Cursor filaEmpl = bd.rawQuery(consultaEmpl, argsEmpl);
+            //String consultaEmpl = "SELECT "+ Utilidades.campoIdEmpl+ "," + Utilidades.campoNombreEmpl +" FROM "+ Utilidades.tablaEmpleado +" WHERE "+ Utilidades.campoEmpresa + "=?";
+            Cursor filaEmpl = bd.query(Utilidades.tablaEmpresa, camposDevueltosEmpl, Utilidades.campoEmpresa+"=? " , argsEmpl, null, null, null);
 
             if(filaEmpl.moveToFirst()){
                 TextView tvAñadirEmpleados = new TextView(getApplicationContext());
