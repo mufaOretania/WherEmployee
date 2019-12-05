@@ -14,14 +14,16 @@ public class Utilidades {
     public static final String campoContrasena = "contrasena";
 
     public static final String crearTablaEmpresa = "CREATE TABLE IF NOT EXISTS "+ tablaEmpresa +" (" +
-            ""+campoIdEmpresa+" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            ""+campoIdEmpresa+" INTEGER AUTOINCREMENT PRIMARY KEY," +
             ""+campoNombreEmp+" TEXT NOT NULL," +
             ""+campoNombreProp+" TEXT NOT NULL," +
             ""+campoDni+" TEXT NOT NULL UNIQUE," +
-            ""+campoTelefono+" TEXT NOT NULL," +
+            ""+campoTelefono+" NUMERIC NOT NULL," +
             ""+campoDireccion+" TEXT NOT NULL," +
             ""+campoUsuario+" TEXT NOT NULL," +
             ""+campoContrasena+" TEXT NOT NULL";
+
+    public static final String mufaSL =  "INSERT INTO empresa( id, nombreEmp, nombrePropietario, dniPropietario, telefono, direccion, usuarioJefe, contrasena) VALUES ('1', 'Mufasa SL', 'Mufasa', '26262626X', '666666666', 'Los casas, 8', 'mufa', 'mufa' );";
 
 
     //Valores constantes de la tabla Empleado
@@ -36,14 +38,14 @@ public class Utilidades {
     public static final String campoEmpresa = "empresa";
 
     public static final String crearTablaEmpleado = "CREATE TABLE IF NOT EXISTS "+ tablaEmpleado +" (" +
-            ""+campoIdEmpl+" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            ""+campoIdEmpl+" INTEGER AUTOINCREMENT PRIMARY KEY," +
             ""+campoNombreEmpl+" TEXT NOT NULL," +
             ""+campoDniEmpl+" TEXT NOT NULL UNIQUE," +
-            ""+campoTelefonoEmpl+" TEXT NOT NULL," +
+            ""+campoTelefonoEmpl+" NUMERIC NOT NULL," +
             ""+campoDireccionEmpl+" TEXT NOT NULL," +
             ""+campoUsuarioEmpl+" TEXT NOT NULL, " +
             ""+campoContrasenaEmpl+" TEXT NOT NULL, " +
-            ""+campoEmpresa+" INTEGER NOT NULL)";
+            ""+campoEmpresa+" INTEGER NOT NULL";
 
 
     //Valores constantes de la tabla Jornada
@@ -54,7 +56,7 @@ public class Utilidades {
     public static final String campoEmpleado = "empleado";
 
     public static final String crearTablaJornada = "CREATE TABLE IF NOT EXISTS "+ tablaJornada +" (" +
-            ""+campoIdJor+" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            ""+campoIdJor+" INTEGER AUTOINCREMENT PRIMARY KEY," +
             ""+campoHoraInicio+" DATE NOT NULL, " +
             ""+campoHoraFin+"  DATE NOT NULL, " +
             ""+campoEmpleado+" INTEGER NOT NULL)";
@@ -68,9 +70,9 @@ public class Utilidades {
     public static final String campoJornada = "jornada";
 
     public static final String crearTablaCoordenada = "CREATE TABLE IF NOT EXISTS "+tablaCoordenada+" (" +
-            ""+campoIdCoor+" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            ""+campolatitud+" FLOAT NOT NULL, " +
-            ""+campolongitud+" FLOAT NOT NULL, " +
+            ""+campoIdCoor+" INTEGER AUTOINCREMENT PRIMARY KEY," +
+            ""+campolatitud+" REAL NOT NULL, " +
+            ""+campolongitud+" REAL NOT NULL, " +
             ""+campoEmpleadoCoor+" INTEGER NOT NULL, " +
             ""+campoJornada+" INTEGER NOT NULL)";
 

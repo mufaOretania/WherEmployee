@@ -7,16 +7,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wheremployee.utilidades.Utilidades;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class InfoJornadaEmpleado extends AppCompatActivity {
 
-    private MapView map = null;
-    private TextView txtInfo = null;
+    private TextView txtInfo;
+    private LinearLayout llMapa;
 
     int idEmpleado = 0;
 
@@ -25,8 +30,8 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_jornada_empleado);
 
-        map = (MapView) findViewById(R.id.mapView);
         txtInfo = (TextView) findViewById(R.id.txtInfo);
+        llMapa = (LinearLayout) findViewById(R.id.llMapa);
 
         Bundle datos = this.getIntent().getExtras();
         if(datos != null){
@@ -65,6 +70,7 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
             //Añadir aquí las coordenadas al mapa
 
+
             fila.close();
             bd.close();
 
@@ -79,5 +85,4 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
         Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
         startActivityForResult(intent, 0);
     }
-
 }

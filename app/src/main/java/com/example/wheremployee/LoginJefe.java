@@ -16,6 +16,7 @@ public class LoginJefe extends AppCompatActivity {
 
     private EditText cajaNombreUsuario, cajaContrasena;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
