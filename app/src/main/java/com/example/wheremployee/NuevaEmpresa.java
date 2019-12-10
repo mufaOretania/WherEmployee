@@ -37,10 +37,16 @@ public class NuevaEmpresa extends AppCompatActivity {
 
     public void crearEmpresa(View v){
 
-        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-        SQLiteDatabase bd = con.getWritableDatabase();
-
         ContentValues valores = null;
+        SQLiteDatabase bd = null;
+
+        try{
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd = con.getWritableDatabase();
+        } catch(Exception e){
+            Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+        }
+
 
         try {
             String nombre = cajaNombre.getText().toString();
@@ -63,6 +69,8 @@ public class NuevaEmpresa extends AppCompatActivity {
             String digitos = dni.substring(0, 7);
             String letra = dni.substring(8);
 
+            Toast.makeText(this, "BIEN - Datos capturados.", Toast.LENGTH_SHORT).show();
+
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los campos.", Toast.LENGTH_SHORT).show();
 
@@ -71,7 +79,8 @@ public class NuevaEmpresa extends AppCompatActivity {
         }
 
         try{
-            idEmpresa = bd.insert(Utilidades.tablaEmpresa, Utilidades.campoIdEmpresa, valores);
+            idEmpresa = bd.insert(Utilidades.tablaEmpresa, null, valores);
+            bd.close();
         } catch (Exception e) {
             Toast.makeText(this, "Error al insertar la empresa en la base de datos.", Toast.LENGTH_SHORT).show();
         }
@@ -83,8 +92,6 @@ public class NuevaEmpresa extends AppCompatActivity {
         cajaDireccion.setText("");
         cajaNombreUsuario.setText("");
         cajaContrasena.setText("");
-
-        bd.close();
 
         if(idEmpresa == -1){
             Toast.makeText(this, "Error al crear la empresa.", Toast.LENGTH_SHORT).show();

@@ -2,7 +2,6 @@ package com.example.wheremployee;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,12 +35,18 @@ public class PrincipalJefe extends AppCompatActivity {
         tvPortada = (TextView) findViewById(R.id.tvPortada);
         ll = (LinearLayout) findViewById(R.id.llEmpleados);
 
+        SQLiteDatabase bd = null;
+
         try{
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd = con.getReadableDatabase();
+        } catch(Exception e){
+            Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+        }
 
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-            SQLiteDatabase bd = con.getWritableDatabase();
+        String idEmpresaString = idEmpresa+"";
 
-            String idEmpresaString = idEmpresa+"";
+        try{
             String[] args = new String[] {idEmpresaString};
             String[] camposDevueltos = new String[] {Utilidades.campoNombreEmp};
 
@@ -49,6 +54,31 @@ public class PrincipalJefe extends AppCompatActivity {
             Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoIdEmpresa+"=? " , args, null, null, null);
 
             tvPortada.setText(fila.getString(0));
+        } catch (Exception e) {
+            Toast.makeText(this, "No se encontró el nombre de la empresa.", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent (this, LoginJefe.class);
+            intent.putExtra("idEmpresa", idEmpresa);
+            startActivityForResult(intent, 0);
+        }
+
+        try{
+            String[] args = new String[] {idEmpresaString};
+            String[] camposDevueltos = new String[] {Utilidades.campoNombreEmp};
+
+            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+            Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoIdEmpresa+"=? " , args, null, null, null);
+
+            tvPortada.setText(fila.getString(0));
+        } catch (Exception e) {
+            Toast.makeText(this, "No se encontró el nombre de la empresa.", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent (this, LoginJefe.class);
+            intent.putExtra("idEmpresa", idEmpresa);
+            startActivityForResult(intent, 0);
+        }
+
+        try{
 
             String[] argsEmpl = new String[] {idEmpresaString};
             String[] camposDevueltosEmpl = new String[] {Utilidades.campoIdEmpl, Utilidades.campoNombreEmpl};
@@ -87,11 +117,11 @@ public class PrincipalJefe extends AppCompatActivity {
                 }
             }
 
-            fila.close();
+            filaEmpl.close();
             bd.close();
 
         } catch (Exception e) {
-            Toast.makeText(this, "No existe ninguna empresa con ese nombre de usuario y contraseña", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se pudo encontrar los empleados de la empresa.", Toast.LENGTH_SHORT).show();
         }
     }
 

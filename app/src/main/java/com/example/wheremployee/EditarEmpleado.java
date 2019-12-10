@@ -17,8 +17,7 @@ public class EditarEmpleado extends AppCompatActivity {
 
     private EditText cajaId, cajaNombre, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
 
-    Bundle datos = this.getIntent().getExtras();
-    int idEmpleado = datos.getInt("idEmpleado");
+    long idEmpleado = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +32,28 @@ public class EditarEmpleado extends AppCompatActivity {
         cajaNombreUsuario = (EditText) findViewById(R.id.cajaNombreUsuario);
         cajaContrasena = (EditText) findViewById(R.id.cajaContrasena);
 
-        ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-        SQLiteDatabase bd = con.getWritableDatabase();
+        Bundle datos = this.getIntent().getExtras();
+        if(datos != null) {
+            idEmpleado = datos.getLong("idEmpleado");
+        }
+
+        SQLiteDatabase bd = null;
 
         try{
-            String consulta = "SELECT * FROM "+ Utilidades.tablaEmpleado +" WHERE id=" + idEmpleado;
-            Cursor fila = bd.rawQuery(consulta, null);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd = con.getReadableDatabase();
+        } catch(Exception e){
+            Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+        }
+
+        String idEmpleadoString = idEmpleado+"";
+
+        String[] args = new String[] {idEmpleadoString};
+        String[] camposDevueltos = new String[] {Utilidades.campoIdEmpl, Utilidades.campoNombreEmpl, Utilidades.campoDniEmpl, Utilidades.campoTelefonoEmpl,Utilidades.campoDireccionEmpl, Utilidades.campoUsuarioEmpl, Utilidades.campoContrasenaEmpl};
+
+        try {
+            //String consulta = "SELECT * FROM "+ Utilidades.tablaEmpleado +" WHERE id=" + idEmpleado;
+            Cursor fila = bd.query(Utilidades.tablaEmpleado, camposDevueltos, Utilidades.campoIdEmpresa + "=? ", args, null, null, null);
 
             cajaId.setText(fila.getString(0));
             cajaNombre.setText(fila.getString(1));
@@ -50,13 +65,10 @@ public class EditarEmpleado extends AppCompatActivity {
 
             fila.close();
             bd.close();
-
         } catch (Exception e) {
-            Toast.makeText(this, "Error al cargar la página los datos del empleado", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent (this, PrincipalJefe.class);
-            startActivityForResult(intent, 0);
+            Toast.makeText(this, "Error al consultar los datos del empleado en la base de datos.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void cancelar(View v){
@@ -66,12 +78,17 @@ public class EditarEmpleado extends AppCompatActivity {
 
     public void guardar(View v){
 
-        try {
+        SQLiteDatabase bd2 = null;
+        ContentValues valores = new ContentValues();
 
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-            SQLiteDatabase bd = con.getWritableDatabase();
+        try{
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd2 = con.getWritableDatabase();
+        } catch(Exception e){
+            Toast.makeText(this, "Error al actualizar los datos del empleado.", Toast.LENGTH_SHORT).show();
+        }
 
-            String id = cajaId.getText().toString();
+        try{
             String nombre = cajaNombre.getText().toString();
             String dni = cajaDni.getText().toString();
             String telefono = cajaTelefono.getText().toString();
@@ -79,17 +96,28 @@ public class EditarEmpleado extends AppCompatActivity {
             String nombreUsuario = cajaNombreUsuario.getText().toString();
             String contrasena = cajaContrasena.getText().toString();
 
-            ContentValues valores = new ContentValues();
-            valores.put(Utilidades.campoNombreEmpl, nombre);
-            valores.put(Utilidades.campoDniEmpl, dni);
-            valores.put(Utilidades.campoTelefonoEmpl, telefono);
-            valores.put(Utilidades.campoDireccionEmpl, direccion);
-            valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
-            valores.put(Utilidades.campoContrasenaEmpl, contrasena);
+            valores.put(Utilidades.campoNombreEmp, nombre);
+            valores.put(Utilidades.campoDni, dni);
+            valores.put(Utilidades.campoTelefono, telefono);
+            valores.put(Utilidades.campoDireccion, direccion);
+            valores.put(Utilidades.campoUsuario, nombreUsuario);
+            valores.put(Utilidades.campoContrasena, contrasena);
 
-            int cant = bd.update(Utilidades.tablaEmpleado, valores, " " + Utilidades.campoIdEmpl + "=" + id, null);
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al capturar los datos.", Toast.LENGTH_SHORT).show();
 
-            bd.close();
+            Intent intent = new Intent (v.getContext(), EditarEmpresa.class);
+            intent.putExtra("idEmpleado", idEmpleado);
+            startActivityForResult(intent, 0);
+        }
+
+        try {
+
+            String idEmpleadoString = idEmpleado+"";
+            String[] args = new String[] {idEmpleadoString};
+            int cant = bd2.update(Utilidades.tablaEmpleado, valores, Utilidades.campoIdEmpresa + "=?", args);
+
+            bd2.close();
 
             if (cant == 1) {
                 Toast.makeText(this, "Se modificaron los datos del empleado", Toast.LENGTH_SHORT).show();
@@ -97,13 +125,62 @@ public class EditarEmpleado extends AppCompatActivity {
                 Toast.makeText(this, "Error. Imposible actualizar los datos del empleado.", Toast.LENGTH_SHORT).show();
             }
 
-            Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
+            Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            intent.putExtra("idEmpleado", idEmpleado);
             startActivityForResult(intent, 0);
 
         } catch( Exception e) {
-            Toast.makeText(this, "Se produjo un error al editar los datos de la empresa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Se produjo un error al editar los datos del empleado", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            intent.putExtra("idEmpleado", idEmpleado);
+            startActivityForResult(intent, 0);
+        }
+
+    }
+
+    public void eliminar(View v){
+
+        SQLiteDatabase bd3 = null;
+        ContentValues valores = new ContentValues();
+
+        try{
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd3 = con.getWritableDatabase();
+        } catch(Exception e){
+            Toast.makeText(this, "Error al eliminar el empleado.", Toast.LENGTH_SHORT).show();
+        }
+
+        try {
+
+            String idEmpleadoString = idEmpleado+"";
+            String[] args = new String[] {idEmpleadoString};
+            int cant = bd3.delete(Utilidades.tablaEmpleado, Utilidades.campoIdEmpl + "=?", args);
+
+            bd3.close();
+
+            cajaId.setText("");
+            cajaNombre.setText("");
+            cajaDni.setText("");
+            cajaTelefono.setText("");
+            cajaDireccion.setText("");
+            cajaNombreUsuario.setText("");
+            cajaContrasena.setText("");
+
+            if (cant == 1) {
+                Toast.makeText(this, "Se eliminó el empleado correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "No se pudó eliminar el empleado", Toast.LENGTH_SHORT).show();
+            }
+
+            Intent intent = new Intent(v.getContext(), MainActivity.class);
+            startActivityForResult(intent, 0);
+
+        }catch (Exception e){
+            Toast.makeText(this, "Se produjo un error al eliminar el empleado", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
+            intent.putExtra("idEmpleado", idEmpleado);
             startActivityForResult(intent, 0);
         }
     }

@@ -15,6 +15,7 @@ import com.example.wheremployee.utilidades.Utilidades;
 public class LoginJefe extends AppCompatActivity {
 
     private EditText cajaNombreUsuario, cajaContrasena;
+    long idEmpresa = 0;
 
 
     @Override
@@ -25,14 +26,19 @@ public class LoginJefe extends AppCompatActivity {
         cajaNombreUsuario = (EditText) findViewById(R.id.cajaNombreUsuario);
         cajaContrasena = (EditText) findViewById(R.id.cajaContrasena);
 
-        int idEmpresa = 0;
+        SQLiteDatabase bd = null;
 
         Bundle datos = this.getIntent().getExtras();
         if(datos != null){
-            idEmpresa = datos.getInt("idEmpresa");
+            idEmpresa = datos.getLong("idEmpresa");
 
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-            SQLiteDatabase bd = con.getWritableDatabase();
+            try{
+                ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+                bd = con.getReadableDatabase();
+            } catch(Exception e){
+                Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            }
+
 
             String idEmpresaString = idEmpresa+"";
 
@@ -65,40 +71,50 @@ public class LoginJefe extends AppCompatActivity {
 
     public void login(View v){
 
+        SQLiteDatabase bd = null;
+        int idEmpresaLogin = 0;
+        String user = null;
+        String pass = null;
+
         try{
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd = con.getReadableDatabase();
+        } catch(Exception e){
+            Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+        }
 
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_wherEmployee", null, 1);
-            SQLiteDatabase bd = con.getReadableDatabase();
+        try{
+            user = cajaNombreUsuario.getText().toString();
+            pass = cajaContrasena.getText().toString();
 
-            String user = cajaNombreUsuario.getText().toString();
-            String pass = cajaContrasena.getText().toString();
+        } catch (Exception e){
+            Toast.makeText(this, "Error al capturar los datos de los empleados.", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent (v.getContext(), LoginJefe.class);
+            startActivityForResult(intent, 0);
+        }
+
+        try{
 
             String[] args = new String[] {user,pass};
             String[] camposDevueltos = new String[] {Utilidades.campoIdEmpresa};
 
-            int idEmpresaLogin = 0;
+            //String consulta = "SELECT id FROM "+ Utilidades.tablaEmpresa +" WHERE "+Utilidades.campoUsuario+"=? and "+Utilidades.campoContrasena+"=?";
+            Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoUsuario+"=? and "+ Utilidades.campoContrasena+"=?" , args, null, null, null);
+            idEmpresaLogin = fila.getInt(0);
 
-            try{
-                //String consulta = "SELECT id FROM "+ Utilidades.tablaEmpresa +" WHERE "+Utilidades.campoUsuario+"=? and "+Utilidades.campoContrasena+"=?";
-                Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoUsuario+"=? and "+ Utilidades.campoContrasena+"=?" , args, null, null, null);
-                idEmpresaLogin = fila.getInt(0);
+            fila.close();
+            bd.close();
 
-                fila.close();
-                bd.close();
-
-                Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
-                intent.putExtra("idEmpresa", idEmpresaLogin);
-                startActivityForResult(intent, 0);
-            } catch (Exception e) {
-                Toast.makeText(this, "No se encontro ninguna empresa con ese nombre de usuario y contraseña.", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent (v.getContext(), LoginJefe.class);
-                intent.putExtra("idEmpresa", idEmpresaLogin);
-                startActivityForResult(intent, 0);
-            }
-
+            Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
+            intent.putExtra("idEmpresa", idEmpresaLogin);
+            startActivityForResult(intent, 0);
         } catch (Exception e) {
-            Toast.makeText(this, "Error al cargar la página.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se encontro ninguna empresa con ese nombre de usuario y contraseña.", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent (v.getContext(), LoginJefe.class);
+            intent.putExtra("idEmpresa", idEmpresa);
+            startActivityForResult(intent, 0);
         }
 
     }

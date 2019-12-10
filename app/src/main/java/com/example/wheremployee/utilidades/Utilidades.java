@@ -14,11 +14,11 @@ public class Utilidades {
     public static final String campoContrasena = "contrasena";
 
     public static final String crearTablaEmpresa = "CREATE TABLE IF NOT EXISTS "+ tablaEmpresa +" (" +
-            ""+campoIdEmpresa+" INTEGER AUTOINCREMENT PRIMARY KEY," +
+            ""+campoIdEmpresa+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             ""+campoNombreEmp+" TEXT NOT NULL," +
             ""+campoNombreProp+" TEXT NOT NULL," +
-            ""+campoDni+" TEXT NOT NULL UNIQUE," +
-            ""+campoTelefono+" NUMERIC NOT NULL," +
+            ""+campoDni+" TEXT NOT NULL," +
+            ""+campoTelefono+" TEXT NOT NULL," +
             ""+campoDireccion+" TEXT NOT NULL," +
             ""+campoUsuario+" TEXT NOT NULL," +
             ""+campoContrasena+" TEXT NOT NULL";
@@ -38,10 +38,10 @@ public class Utilidades {
     public static final String campoEmpresa = "empresa";
 
     public static final String crearTablaEmpleado = "CREATE TABLE IF NOT EXISTS "+ tablaEmpleado +" (" +
-            ""+campoIdEmpl+" INTEGER AUTOINCREMENT PRIMARY KEY," +
+            ""+campoIdEmpl+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             ""+campoNombreEmpl+" TEXT NOT NULL," +
-            ""+campoDniEmpl+" TEXT NOT NULL UNIQUE," +
-            ""+campoTelefonoEmpl+" NUMERIC NOT NULL," +
+            ""+campoDniEmpl+" TEXT NOT NULL," +
+            ""+campoTelefonoEmpl+" TEXT NOT NULL," +
             ""+campoDireccionEmpl+" TEXT NOT NULL," +
             ""+campoUsuarioEmpl+" TEXT NOT NULL, " +
             ""+campoContrasenaEmpl+" TEXT NOT NULL, " +
@@ -56,7 +56,7 @@ public class Utilidades {
     public static final String campoEmpleado = "empleado";
 
     public static final String crearTablaJornada = "CREATE TABLE IF NOT EXISTS "+ tablaJornada +" (" +
-            ""+campoIdJor+" INTEGER AUTOINCREMENT PRIMARY KEY," +
+            ""+campoIdJor+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             ""+campoHoraInicio+" DATE NOT NULL, " +
             ""+campoHoraFin+"  DATE NOT NULL, " +
             ""+campoEmpleado+" INTEGER NOT NULL)";
@@ -70,7 +70,7 @@ public class Utilidades {
     public static final String campoJornada = "jornada";
 
     public static final String crearTablaCoordenada = "CREATE TABLE IF NOT EXISTS "+tablaCoordenada+" (" +
-            ""+campoIdCoor+" INTEGER AUTOINCREMENT PRIMARY KEY," +
+            ""+campoIdCoor+" INTEGER PRIMARY KEY AUTOINCREMENT," +
             ""+campolatitud+" REAL NOT NULL, " +
             ""+campolongitud+" REAL NOT NULL, " +
             ""+campoEmpleadoCoor+" INTEGER NOT NULL, " +

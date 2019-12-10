@@ -21,7 +21,6 @@ public class ConexionSqlLiteHelper extends SQLiteOpenHelper {
         db.execSQL(Utilidades.crearTablaEmpleado);
         db.execSQL(Utilidades.crearTablaJornada);
         db.execSQL(Utilidades.crearTablaCoordenada);
-        db.execSQL(Utilidades.mufaSL);
     }
 
     @Override

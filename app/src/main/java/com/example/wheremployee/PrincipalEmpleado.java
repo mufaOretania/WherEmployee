@@ -8,13 +8,16 @@ import android.view.View;
 
 public class PrincipalEmpleado extends AppCompatActivity {
 
-    Bundle datos = this.getIntent().getExtras();
-    int idEmpleado = datos.getInt("idEmpleado");
+    long idEmpleado = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_principal_empleado);
+
+        Bundle datos = this.getIntent().getExtras();
+        if(datos != null) {
+            idEmpleado = datos.getLong("idEmpleado");
+        }
     }
 
     public void atras(View v){
