@@ -21,7 +21,7 @@ public class Utilidades {
             ""+campoTelefono+" TEXT NOT NULL," +
             ""+campoDireccion+" TEXT NOT NULL," +
             ""+campoUsuario+" TEXT NOT NULL," +
-            ""+campoContrasena+" TEXT NOT NULL";
+            ""+campoContrasena+" TEXT NOT NULL)";
 
     public static final String mufaSL =  "INSERT INTO empresa( id, nombreEmp, nombrePropietario, dniPropietario, telefono, direccion, usuarioJefe, contrasena) VALUES ('1', 'Mufasa SL', 'Mufasa', '26262626X', '666666666', 'Los casas, 8', 'mufa', 'mufa' );";
 
@@ -45,7 +45,7 @@ public class Utilidades {
             ""+campoDireccionEmpl+" TEXT NOT NULL," +
             ""+campoUsuarioEmpl+" TEXT NOT NULL, " +
             ""+campoContrasenaEmpl+" TEXT NOT NULL, " +
-            ""+campoEmpresa+" INTEGER NOT NULL";
+            ""+campoEmpresa+" INTEGER NOT NULL)";
 
 
     //Valores constantes de la tabla Jornada

@@ -122,14 +122,14 @@ public class NuevaEmpresa extends AppCompatActivity {
         if(idEmpresa == -1 || idEmpresa == 0){
             Toast.makeText(this, "Error al crear la empresa.", Toast.LENGTH_SHORT).show();
 
-            //Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
-            //startActivityForResult(intent, 0);
+            Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
+            startActivityForResult(intent, 0);
         } else {
             Toast.makeText(this, "Genial, se ha creado su empresa con id: "+ idEmpresa +".", Toast.LENGTH_SHORT).show();
 
-            //Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-            //intent.putExtra("idEmpresa", idEmpresa);
-            //startActivityForResult(intent, 0);
+            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            intent.putExtra("idEmpresa", idEmpresa);
+            startActivityForResult(intent, 0);
         }
 
     }
