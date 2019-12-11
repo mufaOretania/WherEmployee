@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wheremployee.utilidades.Utilidades;
@@ -29,10 +30,14 @@ public class Fichado extends AppCompatActivity {
     private LocationManager locManager;
     private Location loc;
 
+    private TextView txtError;
+
     private Button btnFinalizar;
 
     long idEmpleado = 0;
     long idJornada = 0;
+
+    String error = null;
 
     String horaInicio = null;
     String horaFin = null;
@@ -45,6 +50,8 @@ public class Fichado extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fichado);
 
+        txtError = (TextView) findViewById(R.id.txtError);
+
         Bundle datos = this.getIntent().getExtras();
         if(datos != null) {
             idEmpleado = datos.getLong("idEmpleado");
@@ -56,6 +63,7 @@ public class Fichado extends AppCompatActivity {
             horaInicio = sdf.format(c.getTime());
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar la hora y fecha actual.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try{
@@ -72,6 +80,7 @@ public class Fichado extends AppCompatActivity {
             }
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar las coordenadas actuales.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
     }
@@ -84,6 +93,7 @@ public class Fichado extends AppCompatActivity {
             horaFin = sdf.format(c.getTime());
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar la hora y fecha actual.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         ContentValues valores = null;
@@ -94,6 +104,7 @@ public class Fichado extends AppCompatActivity {
             bd = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try{
@@ -103,6 +114,7 @@ public class Fichado extends AppCompatActivity {
             valores.put(Utilidades.campoEmpleado, idEmpleado);
         } catch(Exception e){
             Toast.makeText(this, "Error al cargar los datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try{
@@ -110,9 +122,10 @@ public class Fichado extends AppCompatActivity {
             bd.close();
         } catch (Exception e) {
             Toast.makeText(this, "Error al insertar la jornada en la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
-        if(idJornada == -1){
+        if(idJornada == -1 || idJornada == 0){
             Toast.makeText(this, "Error al crear la jornada.", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
@@ -124,6 +137,7 @@ public class Fichado extends AppCompatActivity {
             intent.putExtra("idEmpleado", idEmpleado);
             startActivityForResult(intent, 0);
         }
+        txtError.setText(error);
     }
 
 

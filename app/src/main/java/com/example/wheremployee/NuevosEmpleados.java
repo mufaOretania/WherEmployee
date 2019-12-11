@@ -18,13 +18,17 @@ public class NuevosEmpleados extends AppCompatActivity {
 
     private EditText cajaNombre, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
     private LinearLayout llEmpleados;
+    private TextView txtError;
     long idEmpresa = 0;
+
+    String error = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevos_empleados);
 
+        txtError = (TextView) findViewById(R.id.txtError);
         cajaNombre = (EditText) findViewById(R.id.cajaNombre);
         cajaDni = (EditText) findViewById(R.id.cajaDni);
         cajaTelefono = (EditText) findViewById(R.id.cajaTelefono);
@@ -58,6 +62,7 @@ public class NuevosEmpleados extends AppCompatActivity {
             bd = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try{
@@ -80,6 +85,7 @@ public class NuevosEmpleados extends AppCompatActivity {
 
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los empleados.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
             startActivityForResult(intent, 0);
@@ -89,6 +95,7 @@ public class NuevosEmpleados extends AppCompatActivity {
             idEmpleado = bd.insert(Utilidades.tablaEmpresa, null, valores);
         } catch (Exception e) {
             Toast.makeText(this, "Error al crear al empleado en la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         cajaNombre.setText("");
@@ -117,10 +124,12 @@ public class NuevosEmpleados extends AppCompatActivity {
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         }
-
+        txtError.setText(error);
     }
 
     public void terminarEmpresa(View v){
+
+        txtError.setText(error);
         Intent intent = new Intent (v.getContext(), LoginJefe.class);
         intent.putExtra("idEmpresa", idEmpresa);
         startActivityForResult(intent, 0);

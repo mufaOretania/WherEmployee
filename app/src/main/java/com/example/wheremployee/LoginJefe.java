@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wheremployee.utilidades.Utilidades;
@@ -15,7 +16,10 @@ import com.example.wheremployee.utilidades.Utilidades;
 public class LoginJefe extends AppCompatActivity {
 
     private EditText cajaNombreUsuario, cajaContrasena;
+    private TextView txtError;
     long idEmpresa = 0;
+
+    String error = null;
 
 
     @Override
@@ -23,6 +27,7 @@ public class LoginJefe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_jefe);
 
+        txtError = (TextView) findViewById(R.id.txtError);
         cajaNombreUsuario = (EditText) findViewById(R.id.cajaNombreUsuario);
         cajaContrasena = (EditText) findViewById(R.id.cajaContrasena);
 
@@ -37,6 +42,7 @@ public class LoginJefe extends AppCompatActivity {
                 bd = con.getReadableDatabase();
             } catch(Exception e){
                 Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+                error = error + e;
             }
 
 
@@ -59,7 +65,9 @@ public class LoginJefe extends AppCompatActivity {
                 bd.close();
             } catch (Exception e) {
                 Toast.makeText(this, "Error al consultar el id de la empresa en la base de datos.", Toast.LENGTH_SHORT).show();
+                error = error + e;
             }
+            txtError.setText(error);
         }
 
     }
@@ -81,6 +89,7 @@ public class LoginJefe extends AppCompatActivity {
             bd = con.getReadableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try{
@@ -89,6 +98,7 @@ public class LoginJefe extends AppCompatActivity {
 
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los empleados.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (v.getContext(), LoginJefe.class);
             startActivityForResult(intent, 0);
@@ -111,11 +121,12 @@ public class LoginJefe extends AppCompatActivity {
             startActivityForResult(intent, 0);
         } catch (Exception e) {
             Toast.makeText(this, "No se encontro ninguna empresa con ese nombre de usuario y contraseña.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (v.getContext(), LoginJefe.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         }
-
+        txtError.setText(error);
     }
 }

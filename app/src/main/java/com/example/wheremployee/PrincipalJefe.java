@@ -20,12 +20,17 @@ public class PrincipalJefe extends AppCompatActivity {
 
     private TextView tvPortada;
     private LinearLayout ll;
+    private TextView txtError;
+
+    String error = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal_jefe);
+
+        txtError = (TextView) findViewById(R.id.txtError);
 
         Bundle datos = this.getIntent().getExtras();
         if(datos != null){
@@ -42,6 +47,7 @@ public class PrincipalJefe extends AppCompatActivity {
             bd = con.getReadableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         String idEmpresaString = idEmpresa+"";
@@ -56,6 +62,7 @@ public class PrincipalJefe extends AppCompatActivity {
             tvPortada.setText(fila.getString(0));
         } catch (Exception e) {
             Toast.makeText(this, "No se encontró el nombre de la empresa.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (this, LoginJefe.class);
             intent.putExtra("idEmpresa", idEmpresa);
@@ -72,6 +79,7 @@ public class PrincipalJefe extends AppCompatActivity {
             tvPortada.setText(fila.getString(0));
         } catch (Exception e) {
             Toast.makeText(this, "No se encontró el nombre de la empresa.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (this, LoginJefe.class);
             intent.putExtra("idEmpresa", idEmpresa);
@@ -122,7 +130,9 @@ public class PrincipalJefe extends AppCompatActivity {
 
         } catch (Exception e) {
             Toast.makeText(this, "No se pudo encontrar los empleados de la empresa.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
+        txtError.setText(error);
     }
 
     public void editarEmpresa(View v){

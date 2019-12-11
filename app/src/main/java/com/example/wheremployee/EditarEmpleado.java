@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wheremployee.utilidades.Utilidades;
@@ -16,14 +17,17 @@ import com.example.wheremployee.utilidades.Utilidades;
 public class EditarEmpleado extends AppCompatActivity {
 
     private EditText cajaId, cajaNombre, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
+    private TextView txtError;
 
     long idEmpleado = 0;
+    String error = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_empleado);
 
+        txtError = (TextView) findViewById(R.id.txtError);
         cajaId = (EditText) findViewById(R.id.cajaId);
         cajaNombre = (EditText) findViewById(R.id.cajaNombre);
         cajaDni = (EditText) findViewById(R.id.cajaDni);
@@ -44,6 +48,7 @@ public class EditarEmpleado extends AppCompatActivity {
             bd = con.getReadableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         String idEmpleadoString = idEmpleado+"";
@@ -67,6 +72,7 @@ public class EditarEmpleado extends AppCompatActivity {
             bd.close();
         } catch (Exception e) {
             Toast.makeText(this, "Error al consultar los datos del empleado en la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
     }
@@ -86,6 +92,7 @@ public class EditarEmpleado extends AppCompatActivity {
             bd2 = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al actualizar los datos del empleado.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try{
@@ -105,6 +112,7 @@ public class EditarEmpleado extends AppCompatActivity {
 
         } catch (Exception e) {
             Toast.makeText(this, "Error al capturar los datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (v.getContext(), EditarEmpresa.class);
             intent.putExtra("idEmpleado", idEmpleado);
@@ -131,12 +139,14 @@ public class EditarEmpleado extends AppCompatActivity {
 
         } catch( Exception e) {
             Toast.makeText(this, "Se produjo un error al editar los datos del empleado", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
             intent.putExtra("idEmpleado", idEmpleado);
             startActivityForResult(intent, 0);
         }
 
+        txtError.setText(error);
     }
 
 }

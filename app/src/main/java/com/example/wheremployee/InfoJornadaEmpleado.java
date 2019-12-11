@@ -25,8 +25,12 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
     private LinearLayout llMapa;
     private GoogleMap mapa;
 
+    private TextView txtError;
+
     ArrayList<LatLng> coordenadas = new ArrayList<LatLng>();
     int idEmpleado = 0;
+
+    String error = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +39,13 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
         txtInfo = (TextView) findViewById(R.id.txtInfo);
         llMapa = (LinearLayout) findViewById(R.id.llMapa);
+        txtError = (TextView) findViewById(R.id.txtError);
 
         try{
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         } catch (Exception e){
             Toast.makeText(this, "Error al mostrar el mapa.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         Bundle datos = this.getIntent().getExtras();
@@ -67,9 +73,11 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
                 } catch(Exception e){
                     Toast.makeText(this, "Error al consultar la información del empleado.", Toast.LENGTH_SHORT).show();
+                    error = error + e;
                 }
             } catch (Exception e){
                 Toast.makeText(this, "Error al conectarse a la base datos para mostrar la información del empleado.", Toast.LENGTH_SHORT).show();
+                error = error + e;
             }
 
             try{
@@ -87,9 +95,11 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
                 } catch(Exception e){
                     Toast.makeText(this, "Error al consultar la información de la jornada.", Toast.LENGTH_SHORT).show();
+                    error = error + e;
                 }
             } catch (Exception e){
                 Toast.makeText(this, "Error al conectarse a la base datos para mostrar la información del empleado.", Toast.LENGTH_SHORT).show();
+                error = error + e;
             }
 
             try{
@@ -126,12 +136,15 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
                 } catch(Exception e){
                     Toast.makeText(this, "Error al consultar las coordenadas.", Toast.LENGTH_SHORT).show();
+                    error = error + e;
                 }
             } catch (Exception e){
                 Toast.makeText(this, "Error al conectarse a la base datos para mostrar la información del empleado.", Toast.LENGTH_SHORT).show();
+                error = error + e;
             }
 
             bd.close();
+            txtError.setText(error);
         }
     }
 
@@ -149,6 +162,7 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
             bd3 = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al eliminar el empleado.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try {
@@ -170,11 +184,13 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
         }catch (Exception e){
             Toast.makeText(this, "Se produjo un error al eliminar el empleado", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
             intent.putExtra("idEmpleado", idEmpleado);
             startActivityForResult(intent, 0);
         }
+        txtError.setText(error);
     }
 
     public void onMapReady(GoogleMap map) {

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wheremployee.utilidades.Utilidades;
@@ -16,13 +17,16 @@ import com.example.wheremployee.utilidades.Utilidades;
 public class EditarEmpresa extends AppCompatActivity {
 
     private EditText cajaId, cajaNombre, cajaNombrePropietario, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
+    private TextView txtError;
     long idEmpresa = 0;
+    String error = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_empresa);
 
+        txtError = (TextView) findViewById(R.id.txtError);
         cajaId = (EditText) findViewById(R.id.cajaId);
         cajaNombre = (EditText) findViewById(R.id.cajaNombre);
         cajaNombrePropietario = (EditText) findViewById(R.id.cajaNombrePorpietario);
@@ -44,6 +48,7 @@ public class EditarEmpresa extends AppCompatActivity {
             bd = con.getReadableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         String idEmpresaString = idEmpresa+"";
@@ -68,6 +73,7 @@ public class EditarEmpresa extends AppCompatActivity {
             bd.close();
         } catch (Exception e) {
             Toast.makeText(this, "Error al consultar los datos de la empresa en la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
     }
@@ -88,6 +94,7 @@ public class EditarEmpresa extends AppCompatActivity {
             bd2 = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al actualizar los datos de la empresa.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try{
@@ -110,6 +117,7 @@ public class EditarEmpresa extends AppCompatActivity {
 
         } catch (Exception e) {
             Toast.makeText(this, "Error al capturar los datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (v.getContext(), EditarEmpresa.class);
             intent.putExtra("idEmpresa", idEmpresa);
@@ -136,11 +144,13 @@ public class EditarEmpresa extends AppCompatActivity {
 
         } catch( Exception e) {
             Toast.makeText(this, "Se produjo un error al editar los datos de la empresa", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         }
+        txtError.setText(error);
     }
 
     public void eliminar(View v){
@@ -153,6 +163,7 @@ public class EditarEmpresa extends AppCompatActivity {
             bd3 = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al eliminar la empresa.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         try {
@@ -183,10 +194,12 @@ public class EditarEmpresa extends AppCompatActivity {
 
         }catch (Exception e){
             Toast.makeText(this, "Se produjo un error al eliminar la empresa", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         }
+        txtError.setText(error);
     }
 }

@@ -8,19 +8,23 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.wheremployee.utilidades.Utilidades;
 
 public class NuevaEmpresa extends AppCompatActivity {
 
     private EditText cajaNombre, cajaNombrePropietario, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
+    private  TextView txtError;
     long idEmpresa = 0;
+    String error = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nueva_empresa);
 
+        txtError = (TextView) findViewById(R.id.txtError);
         cajaNombre = (EditText) findViewById(R.id.cajaNombre);
         cajaNombrePropietario = (EditText) findViewById(R.id.cajaNombrePorpietario);
         cajaDni = (EditText) findViewById(R.id.cajaDni);
@@ -45,6 +49,7 @@ public class NuevaEmpresa extends AppCompatActivity {
             bd = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
 
@@ -73,6 +78,7 @@ public class NuevaEmpresa extends AppCompatActivity {
 
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los campos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
 
             Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
             startActivityForResult(intent, 0);
@@ -83,6 +89,7 @@ public class NuevaEmpresa extends AppCompatActivity {
             bd.close();
         } catch (Exception e) {
             Toast.makeText(this, "Error al insertar la empresa en la base de datos.", Toast.LENGTH_SHORT).show();
+            error = error + e;
         }
 
         cajaNombre.setText("");
@@ -93,17 +100,19 @@ public class NuevaEmpresa extends AppCompatActivity {
         cajaNombreUsuario.setText("");
         cajaContrasena.setText("");
 
-        if(idEmpresa == -1){
+        txtError.setText(error);
+
+        if(idEmpresa == -1 || idEmpresa == 0){
             Toast.makeText(this, "Error al crear la empresa.", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
-            startActivityForResult(intent, 0);
+            //Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
+            //startActivityForResult(intent, 0);
         } else {
             Toast.makeText(this, "Genial, se ha creado su empresa con id: "+ idEmpresa +".", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-            intent.putExtra("idEmpresa", idEmpresa);
-            startActivityForResult(intent, 0);
+            //Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            //intent.putExtra("idEmpresa", idEmpresa);
+            //startActivityForResult(intent, 0);
         }
 
     }

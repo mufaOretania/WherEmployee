@@ -5,14 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 public class PrincipalEmpleado extends AppCompatActivity {
 
     long idEmpleado = 0;
+    private TextView txtError;
+
+    String error = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        txtError = (TextView) findViewById(R.id.txtError);
 
         Bundle datos = this.getIntent().getExtras();
         if(datos != null) {
