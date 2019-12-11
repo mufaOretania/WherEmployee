@@ -10,11 +10,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.wheremployee.utilidades.Utilidades;
 import com.google.android.gms.maps.GoogleMap;
-
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,76 +36,145 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
         txtInfo = (TextView) findViewById(R.id.txtInfo);
         llMapa = (LinearLayout) findViewById(R.id.llMapa);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
-        assert mapFragment != null;
-        onMapReady(mapa);
+        try{
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+        } catch (Exception e){
+            Toast.makeText(this, "Error al mostrar el mapa.", Toast.LENGTH_SHORT).show();
+        }
 
         Bundle datos = this.getIntent().getExtras();
         if(datos != null){
             idEmpleado = datos.getInt("idEmpleado");
-        }
+            String idJornadaString = null;
 
-        try{
+            SQLiteDatabase bd = null;
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd = con.getWritableDatabase();
 
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "datos", null, 1);
-            SQLiteDatabase bd = con.getWritableDatabase();
+            try{
+                String idEmpleadoString = idEmpleado+"";
+                String[] args = new String[] {idEmpleadoString};
+                String[] camposDevueltos = new String[] {Utilidades.campoNombreEmpl, Utilidades.campoDniEmpl, Utilidades.campoTelefonoEmpl, Utilidades.campoDireccionEmpl, Utilidades.campoUsuarioEmpl, Utilidades.campoContrasenaEmpl};
 
-            String idEmpleadoString = idEmpleado+"";
-            String[] args = new String[] {idEmpleadoString};
-            String[] camposDevueltos = new String[] {Utilidades.campoNombreEmpl, Utilidades.campoDniEmpl, Utilidades.campoTelefonoEmpl, Utilidades.campoDireccionEmpl, Utilidades.campoUsuarioEmpl, Utilidades.campoContrasenaEmpl};
+                try{
+                    //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+                    Cursor fila = bd.query(Utilidades.tablaEmpleado, camposDevueltos, Utilidades.campoIdEmpl+"=? " , args, null, null, null);
 
-            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
-            Cursor fila = bd.query(Utilidades.tablaEmpleado, camposDevueltos, Utilidades.campoIdEmpl+"=? " , args, null, null, null);
+                    String cadena = fila.getString(0)+"\n"+fila.getString(1)+"\n"+fila.getString(2)+"\n"+fila.getString(3)+"\n"+fila.getString(4)+"\n"+fila.getString(5);
+                    txtInfo.setText(cadena);
 
-            String[] argsJornada = new String[] {idEmpleadoString};
-            String[] camposDevueltosJornada = new String[] {Utilidades.campoIdJor};
+                    fila.close();
 
-            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
-            Cursor filaJornada = bd.query(Utilidades.tablaJornada, camposDevueltosJornada, Utilidades.campoIdEmpl+"=? " , argsJornada, "DESCENDENT", null, null);
-
-            int idJornada = filaJornada.getInt(0);
-            String idJornadaString = idJornada+"";
-
-            String cadena = fila.getString(0)+"\n"+fila.getString(1)+"\n"+fila.getString(2)+"\n"+fila.getString(3)+"\n"+fila.getString(4)+"\n"+fila.getString(5);
-            txtInfo.setText(cadena);
-
-            String[] argsCoor = new String[] {idEmpleadoString, idJornadaString};
-            String[] camposDevueltosCoor = new String[] {Utilidades.campolongitud, Utilidades.campolatitud};
-
-            //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
-            Cursor filaCoor = bd.query(Utilidades.tablaCoordenada, camposDevueltosCoor, Utilidades.campoEmpleadoCoor+"=? and "+ Utilidades.campoJornada+"=?" , argsCoor, null, null, null);
-
-            //Añadir aquí las coordenadas al map
-
-            if(filaCoor.moveToFirst()){
-                LatLng latlng = new LatLng(filaCoor.getFloat(0),filaCoor.getFloat(1));
-                coordenadas.add(latlng);
-
-                coordenadas.add(latlng);
-                while(filaCoor.moveToNext()){
-                    LatLng latlng2 = new LatLng(filaCoor.getFloat(0),filaCoor.getFloat(1));
-                    coordenadas.add(latlng2);
+                } catch(Exception e){
+                    Toast.makeText(this, "Error al consultar la información del empleado.", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(this, "No se encontraron coordenadas para este empleado", Toast.LENGTH_SHORT).show();
+            } catch (Exception e){
+                Toast.makeText(this, "Error al conectarse a la base datos para mostrar la información del empleado.", Toast.LENGTH_SHORT).show();
             }
 
+            try{
+                String idEmpleadoString = idEmpleado+"";
+                String[] argsJornada = new String[] {idEmpleadoString};
+                String[] camposDevueltosJornada = new String[] {Utilidades.campoIdJor};
+                try{
+                    //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+                    Cursor filaJornada = bd.query(Utilidades.tablaJornada, camposDevueltosJornada, Utilidades.campoIdEmpl+"=? " , argsJornada, "DESCENDENT", null, null);
 
-            fila.close();
-            filaJornada.close();
-            filaCoor.close();
+                    int idJornada = filaJornada.getInt(0);
+                    idJornadaString = idJornada+"";
+
+                    filaJornada.close();
+
+                } catch(Exception e){
+                    Toast.makeText(this, "Error al consultar la información de la jornada.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e){
+                Toast.makeText(this, "Error al conectarse a la base datos para mostrar la información del empleado.", Toast.LENGTH_SHORT).show();
+            }
+
+            try{
+                String idEmpleadoString = idEmpleado+"";
+                String[] argsCoor = new String[] {idEmpleadoString, idJornadaString};
+                String[] camposDevueltosCoor = new String[] {Utilidades.campolongitud, Utilidades.campolatitud};
+                try{
+                    //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
+                    Cursor filaCoor = bd.query(Utilidades.tablaCoordenada, camposDevueltosCoor, Utilidades.campoEmpleadoCoor+"=? and "+ Utilidades.campoJornada+"=?" , argsCoor, null, null, null);
+
+                    if(filaCoor.moveToFirst()){
+                        LatLng latlng = new LatLng(filaCoor.getFloat(0),filaCoor.getFloat(1));
+                        coordenadas.add(latlng);
+
+                        coordenadas.add(latlng);
+                        while(filaCoor.moveToNext()){
+                            LatLng latlng2 = new LatLng(filaCoor.getFloat(0),filaCoor.getFloat(1));
+                            coordenadas.add(latlng2);
+                        }
+
+                        //Añadir aquí las coordenadas al map///////////////////////////////////////////////////////////////////
+                        try{
+                            onMapReady(mapa);
+                        } catch (Exception e){
+                            Toast.makeText(this, "Error al mostrar el mapa. OnMapReady.", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                        filaCoor.close();
+
+                    } else {
+                        Toast.makeText(this, "No se encontraron coordenadas para este empleado", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch(Exception e){
+                    Toast.makeText(this, "Error al consultar las coordenadas.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e){
+                Toast.makeText(this, "Error al conectarse a la base datos para mostrar la información del empleado.", Toast.LENGTH_SHORT).show();
+            }
+
             bd.close();
-
-        } catch (Exception e) {
-            Toast.makeText(this, "No se encontro información acerca de este empleado.", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     public void atras(View v){
         Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
         startActivityForResult(intent, 0);
+    }
+
+    public void eliminar(View v){
+
+        SQLiteDatabase bd3 = null;
+
+        try{
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            bd3 = con.getWritableDatabase();
+        } catch(Exception e){
+            Toast.makeText(this, "Error al eliminar el empleado.", Toast.LENGTH_SHORT).show();
+        }
+
+        try {
+
+            String idEmpleadoString = idEmpleado+"";
+            String[] args = new String[] {idEmpleadoString};
+            int cant = bd3.delete(Utilidades.tablaEmpleado, Utilidades.campoIdEmpl + "=?", args);
+
+            bd3.close();
+
+            if (cant == 1) {
+                Toast.makeText(this, "Se eliminó el empleado correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "No se pudó eliminar el empleado", Toast.LENGTH_SHORT).show();
+            }
+
+            Intent intent = new Intent(v.getContext(), MainActivity.class);
+            startActivityForResult(intent, 0);
+
+        }catch (Exception e){
+            Toast.makeText(this, "Se produjo un error al eliminar el empleado", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
+            intent.putExtra("idEmpleado", idEmpleado);
+            startActivityForResult(intent, 0);
+        }
     }
 
     public void onMapReady(GoogleMap map) {

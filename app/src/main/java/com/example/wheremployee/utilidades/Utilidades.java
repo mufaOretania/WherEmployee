@@ -71,8 +71,8 @@ public class Utilidades {
 
     public static final String crearTablaCoordenada = "CREATE TABLE IF NOT EXISTS "+tablaCoordenada+" (" +
             ""+campoIdCoor+" INTEGER PRIMARY KEY AUTOINCREMENT," +
-            ""+campolatitud+" REAL NOT NULL, " +
-            ""+campolongitud+" REAL NOT NULL, " +
+            ""+campolatitud+" DOUBLE NOT NULL, " +
+            ""+campolongitud+" DOUBLE NOT NULL, " +
             ""+campoEmpleadoCoor+" INTEGER NOT NULL, " +
             ""+campoJornada+" INTEGER NOT NULL)";
 
