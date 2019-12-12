@@ -62,7 +62,7 @@ public class NuevosEmpleados extends AppCompatActivity {
         SQLiteDatabase bd = null;
 
         try{
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
             bd = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();

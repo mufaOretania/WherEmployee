@@ -74,6 +74,6 @@ public class Utilidades {
             ""+campolatitud+" DOUBLE NOT NULL, " +
             ""+campolongitud+" DOUBLE NOT NULL, " +
             ""+campoEmpleadoCoor+" INTEGER NOT NULL, " +
-            ""+campoJornada+" INTEGER NOT NULL)";
+            ""+campoJornada+" INTEGER)";
 
 }

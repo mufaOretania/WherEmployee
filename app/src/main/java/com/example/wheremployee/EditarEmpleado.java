@@ -44,7 +44,7 @@ public class EditarEmpleado extends AppCompatActivity {
         SQLiteDatabase bd = null;
 
         try{
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
             bd = con.getReadableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
@@ -94,7 +94,7 @@ public class EditarEmpleado extends AppCompatActivity {
         ContentValues valores = new ContentValues();
 
         try{
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
             bd2 = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al actualizar los datos del empleado.", Toast.LENGTH_SHORT).show();

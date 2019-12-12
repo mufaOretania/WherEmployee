@@ -57,7 +57,7 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
             SQLiteDatabase bd = null;
             try{
-                ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+                ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
                 bd = con.getWritableDatabase();
             } catch(Exception e){
                 Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
@@ -137,7 +137,6 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
                         LatLng latlng = new LatLng(filaCoor.getFloat(0),filaCoor.getFloat(1));
                         coordenadas.add(latlng);
 
-                        coordenadas.add(latlng);
                         while(filaCoor.moveToNext()){
                             LatLng latlng2 = new LatLng(filaCoor.getFloat(0),filaCoor.getFloat(1));
                             coordenadas.add(latlng2);
@@ -181,7 +180,7 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
         SQLiteDatabase bd3 = null;
 
         try{
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
             bd3 = con.getWritableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al eliminar el empleado.", Toast.LENGTH_SHORT).show();

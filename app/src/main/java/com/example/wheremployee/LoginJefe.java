@@ -38,7 +38,7 @@ public class LoginJefe extends AppCompatActivity {
             idEmpresa = datos.getLong("idEmpresa");
 
             try{
-                ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+                ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
                 bd = con.getReadableDatabase();
             } catch(Exception e){
                 Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
@@ -91,7 +91,7 @@ public class LoginJefe extends AppCompatActivity {
         String pass = null;
 
         try{
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
             bd = con.getReadableDatabase();
         } catch(Exception e){
             Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
