@@ -28,7 +28,8 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
     private TextView txtError;
 
     ArrayList<LatLng> coordenadas = new ArrayList<LatLng>();
-    int idEmpleado = 0;
+    long idEmpleado = 0;
+    long idEmpresa = 0;
 
     String error = null;
 
@@ -50,12 +51,18 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
         Bundle datos = this.getIntent().getExtras();
         if(datos != null){
-            idEmpleado = datos.getInt("idEmpleado");
+            idEmpleado = datos.getLong("idEmpleado");
+            idEmpresa = datos.getLong("idEmpresa");
             String idJornadaString = null;
 
             SQLiteDatabase bd = null;
-            ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
-            bd = con.getWritableDatabase();
+            try{
+                ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
+                bd = con.getWritableDatabase();
+            } catch(Exception e){
+                Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
+                error = error + e;
+            }
 
             try{
                 String idEmpleadoString = idEmpleado+"";
@@ -66,8 +73,16 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
                     //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
                     Cursor fila = bd.query(Utilidades.tablaEmpleado, camposDevueltos, Utilidades.campoIdEmpl+"=? " , args, null, null, null);
 
-                    String cadena = fila.getString(0)+"\n"+fila.getString(1)+"\n"+fila.getString(2)+"\n"+fila.getString(3)+"\n"+fila.getString(4)+"\n"+fila.getString(5);
-                    txtInfo.setText(cadena);
+                    try{
+                        if (fila.moveToFirst()){
+                            String cadena = fila.getString(0)+"\n"+fila.getString(1)+"\n"+fila.getString(2)+"\n"+fila.getString(3)+"\n"+fila.getString(4)+"\n"+fila.getString(5);
+                            txtInfo.setText(cadena);
+
+                            Toast.makeText(this, "Obteniendo datos personales.", Toast.LENGTH_SHORT).show();
+                        }
+                    }catch(Exception e){
+                        Toast.makeText(this, "No se encontraron datos sobre el empleado.", Toast.LENGTH_SHORT).show();
+                    }
 
                     fila.close();
 
@@ -88,8 +103,16 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
                     //String consulta = "SELECT "+ Utilidades.campoNombreEmp +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+ Utilidades.campoIdEmpresa + "=?";
                     Cursor filaJornada = bd.query(Utilidades.tablaJornada, camposDevueltosJornada, Utilidades.campoIdEmpl+"=? " , argsJornada, "DESCENDENT", null, null);
 
-                    int idJornada = filaJornada.getInt(0);
-                    idJornadaString = idJornada+"";
+                    try{
+                        if (filaJornada.moveToFirst()){
+                            int idJornada = filaJornada.getInt(0);
+                            idJornadaString = idJornada+"";
+
+                            Toast.makeText(this, "Obteniendo datos sobre la jornada.", Toast.LENGTH_SHORT).show();
+                        }
+                    }catch(Exception e){
+                        Toast.makeText(this, "No se encontraron datos sobre el empleado.", Toast.LENGTH_SHORT).show();
+                    }
 
                     filaJornada.close();
 
@@ -175,19 +198,24 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
             if (cant == 1) {
                 Toast.makeText(this, "Se eliminó el empleado correctamente", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+                intent.putExtra("idEmpresa", idEmpresa);
+                startActivityForResult(intent, 0);
             } else {
                 Toast.makeText(this, "No se pudó eliminar el empleado", Toast.LENGTH_SHORT).show();
-            }
 
-            Intent intent = new Intent(v.getContext(), MainActivity.class);
-            startActivityForResult(intent, 0);
+                Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+                intent.putExtra("idEmpresa", idEmpresa);
+                startActivityForResult(intent, 0);
+            }
 
         }catch (Exception e){
             Toast.makeText(this, "Se produjo un error al eliminar el empleado", Toast.LENGTH_SHORT).show();
             error = error + e;
 
-            Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
-            intent.putExtra("idEmpleado", idEmpleado);
+            Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         }
         txtError.setText(error);

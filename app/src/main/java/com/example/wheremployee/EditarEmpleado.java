@@ -60,13 +60,19 @@ public class EditarEmpleado extends AppCompatActivity {
             //String consulta = "SELECT * FROM "+ Utilidades.tablaEmpleado +" WHERE id=" + idEmpleado;
             Cursor fila = bd.query(Utilidades.tablaEmpleado, camposDevueltos, Utilidades.campoIdEmpresa + "=? ", args, null, null, null);
 
-            cajaId.setText(fila.getString(0));
-            cajaNombre.setText(fila.getString(1));
-            cajaDni.setText(fila.getString(2));
-            cajaTelefono.setText(fila.getString(3));
-            cajaDireccion.setText(fila.getString(4));
-            cajaNombreUsuario.setText(fila.getString(5));
-            cajaContrasena.setText(fila.getString(6));
+            try{
+                if (fila.moveToFirst()){
+                    cajaId.setText(fila.getString(0));
+                    cajaNombre.setText(fila.getString(1));
+                    cajaDni.setText(fila.getString(2));
+                    cajaTelefono.setText(fila.getString(3));
+                    cajaDireccion.setText(fila.getString(4));
+                    cajaNombreUsuario.setText(fila.getString(5));
+                    cajaContrasena.setText(fila.getString(6));
+                }
+            }catch(Exception e){
+                Toast.makeText(this, "No se pudo recuperar los datos de la empresa .", Toast.LENGTH_SHORT).show();
+            }
 
             fila.close();
             bd.close();
@@ -133,7 +139,7 @@ public class EditarEmpleado extends AppCompatActivity {
                 Toast.makeText(this, "Error. Imposible actualizar los datos del empleado.", Toast.LENGTH_SHORT).show();
             }
 
-            Intent intent = new Intent(v.getContext(), PrincipalJefe.class);
+            Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
             intent.putExtra("idEmpleado", idEmpleado);
             startActivityForResult(intent, 0);
 

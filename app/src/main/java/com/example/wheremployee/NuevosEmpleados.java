@@ -19,6 +19,7 @@ public class NuevosEmpleados extends AppCompatActivity {
     private EditText cajaNombre, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
     private LinearLayout llEmpleados;
     private TextView txtError;
+
     long idEmpresa = 0;
 
     String error = null;
@@ -41,6 +42,9 @@ public class NuevosEmpleados extends AppCompatActivity {
         Bundle datos = this.getIntent().getExtras();
         if(datos != null){
             idEmpresa = datos.getLong("idEmpresa");
+            Toast.makeText(this, "Id recibido:" + idEmpresa, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "ERROOOOOOOOR", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -71,9 +75,10 @@ public class NuevosEmpleados extends AppCompatActivity {
             nombreEmpleado = nombre;
             String dni = cajaDni.getText().toString();
             String telefono = cajaTelefono.getText().toString();
-            String direccion = cajaTelefono.getText().toString();
-            String nombreUsuario = cajaTelefono.getText().toString();
+            String direccion = cajaDireccion.getText().toString();
+            String nombreUsuario = cajaNombreUsuario.getText().toString();
             String contrasena = cajaContrasena.getText().toString();
+            int idEmpresaCrear = (int) idEmpresa;
 
             valores.put(Utilidades.campoNombreEmpl, nombre);
             valores.put(Utilidades.campoDniEmpl, dni);
@@ -81,7 +86,10 @@ public class NuevosEmpleados extends AppCompatActivity {
             valores.put(Utilidades.campoDireccionEmpl, direccion);
             valores.put(Utilidades.campoUsuarioEmpl, nombreUsuario);
             valores.put(Utilidades.campoContrasenaEmpl, contrasena);
-            valores.put(Utilidades.campoEmpresa, idEmpresa);
+            valores.put(Utilidades.campoEmpresa, idEmpresaCrear);
+            error = error + idEmpresa + idEmpresaCrear;
+
+            txtError.setText(error);
 
             try{
                 validarDni(dni);
@@ -89,9 +97,9 @@ public class NuevosEmpleados extends AppCompatActivity {
                 Toast.makeText(this, "Dni no válido, introduce un dni válido.", Toast.LENGTH_SHORT).show();
                 error = error + e;
 
-                Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-                intent.putExtra("idEmpresa", idEmpresa);
-                startActivityForResult(intent, 0);
+                //Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+                //intent.putExtra("idEmpresa", idEmpresa);
+                //startActivityForResult(intent, 0);
             }
 
             try{
@@ -100,23 +108,25 @@ public class NuevosEmpleados extends AppCompatActivity {
                 Toast.makeText(this, "Teléfono no válido, introduce un teléfono válido.", Toast.LENGTH_SHORT).show();
                 error = error + e;
 
-                Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-                intent.putExtra("idEmpresa", idEmpresa);
-                startActivityForResult(intent, 0);
+                //Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+                //intent.putExtra("idEmpresa", idEmpresa);
+                //startActivityForResult(intent, 0);
             }
+            txtError.setText(error);
 
 
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los empleados.", Toast.LENGTH_SHORT).show();
             error = error + e;
 
-            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-            intent.putExtra("idEmpresa", idEmpresa);
-            startActivityForResult(intent, 0);
+            //Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            //intent.putExtra("idEmpresa", idEmpresa);
+            //startActivityForResult(intent, 0);
         }
 
         try{
-            idEmpleado = bd.insert(Utilidades.tablaEmpresa, null, valores);
+            idEmpleado = bd.insert(Utilidades.tablaEmpleado, null, valores);
+            bd.close();
         } catch (Exception e) {
             Toast.makeText(this, "Error al crear al empleado en la base de datos.", Toast.LENGTH_SHORT).show();
             error = error + e;
@@ -129,14 +139,12 @@ public class NuevosEmpleados extends AppCompatActivity {
         cajaNombreUsuario.setText("");
         cajaContrasena.setText("");
 
-        bd.close();
-
-        if(idEmpleado == -1){
+        if(idEmpleado == -1 || idEmpleado == 0){
             Toast.makeText(this, "Error al crear el empleado.", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
-            intent.putExtra("idEmpresa", idEmpresa);
-            startActivityForResult(intent, 0);
+            //Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            //intent.putExtra("idEmpresa", idEmpresa);
+            //startActivityForResult(intent, 0);
         } else {
             TextView tvAñadir = new TextView(getApplicationContext());
             tvAñadir.setText(nombreEmpleado);

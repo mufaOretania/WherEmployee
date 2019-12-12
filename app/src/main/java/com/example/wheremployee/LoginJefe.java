@@ -55,11 +55,17 @@ public class LoginJefe extends AppCompatActivity {
                 //String consulta = "SELECT "+ Utilidades.campoUsuario +","+ Utilidades.campoContrasena +" FROM "+ Utilidades.tablaEmpresa +" WHERE "+Utilidades.campoIdEmpresa+"=?";
                 Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoIdEmpresa+"=? " , args, null, null, null);
 
-                String user = fila.getString(0);
-                String pass = fila.getString(1);
+                try{
+                    if (fila.moveToFirst()){
+                        String user = fila.getString(0);
+                        String pass = fila.getString(1);
 
-                cajaNombreUsuario.setText(user);
-                cajaContrasena.setText(pass);
+                        cajaNombreUsuario.setText(user);
+                        cajaContrasena.setText(pass);
+                    }
+                }catch(Exception e){
+                    Toast.makeText(this, "No se encontró ninguna empresa.", Toast.LENGTH_SHORT).show();
+                }
 
                 fila.close();
                 bd.close();
@@ -80,7 +86,7 @@ public class LoginJefe extends AppCompatActivity {
     public void login(View v){
 
         SQLiteDatabase bd = null;
-        int idEmpresaLogin = 0;
+        long idEmpresaLogin = 0;
         String user = null;
         String pass = null;
 
@@ -97,7 +103,7 @@ public class LoginJefe extends AppCompatActivity {
             pass = cajaContrasena.getText().toString();
 
         } catch (Exception e){
-            Toast.makeText(this, "Error al capturar los datos de los empleados.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al capturar los datos de la empresa.", Toast.LENGTH_SHORT).show();
             error = error + e;
 
             Intent intent = new Intent (v.getContext(), LoginJefe.class);
@@ -111,7 +117,15 @@ public class LoginJefe extends AppCompatActivity {
 
             //String consulta = "SELECT id FROM "+ Utilidades.tablaEmpresa +" WHERE "+Utilidades.campoUsuario+"=? and "+Utilidades.campoContrasena+"=?";
             Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoUsuario+"=? and "+ Utilidades.campoContrasena+"=?" , args, null, null, null);
-            idEmpresaLogin = fila.getInt(0);
+
+            try{
+                if (fila.moveToFirst()){
+                    idEmpresaLogin = (long) fila.getInt(0);
+                    Toast.makeText(this, "Iniciando sesión. Id: " + idEmpresaLogin, Toast.LENGTH_SHORT).show();
+                }
+            }catch(Exception e){
+                Toast.makeText(this, "No se encontró ninguna empresa con ese usuario y contraseña.", Toast.LENGTH_SHORT).show();
+            }
 
             fila.close();
             bd.close();

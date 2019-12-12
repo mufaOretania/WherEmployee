@@ -18,6 +18,7 @@ public class EditarEmpresa extends AppCompatActivity {
 
     private EditText cajaId, cajaNombre, cajaNombrePropietario, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
     private TextView txtError;
+
     long idEmpresa = 0;
     String error = null;
 
@@ -60,14 +61,21 @@ public class EditarEmpresa extends AppCompatActivity {
             //String consulta = "SELECT * FROM "+ Utilidades.tablaEmpresa +" WHERE id=" + idEmpresa;
             Cursor fila = bd.query(Utilidades.tablaEmpresa, camposDevueltos, Utilidades.campoIdEmpresa + "=? ", args, null, null, null);
 
-            cajaId.setText(fila.getString(0));
-            cajaNombre.setText(fila.getString(1));
-            cajaNombrePropietario.setText(fila.getString(2));
-            cajaDni.setText(fila.getString(3));
-            cajaTelefono.setText(fila.getString(4));
-            cajaDireccion.setText(fila.getString(5));
-            cajaNombreUsuario.setText(fila.getString(6));
-            cajaContrasena.setText(fila.getString(7));
+            try{
+                if (fila.moveToFirst()){
+                    cajaId.setText(fila.getString(0));
+                    cajaNombre.setText(fila.getString(1));
+                    cajaNombrePropietario.setText(fila.getString(2));
+                    cajaDni.setText(fila.getString(3));
+                    cajaTelefono.setText(fila.getString(4));
+                    cajaDireccion.setText(fila.getString(5));
+                    cajaNombreUsuario.setText(fila.getString(6));
+                    cajaContrasena.setText(fila.getString(7));
+                }
+            }catch(Exception e){
+                Toast.makeText(this, "No se pudo recuperar los datos de la empresa .", Toast.LENGTH_SHORT).show();
+            }
+
 
             fila.close();
             bd.close();
@@ -98,7 +106,6 @@ public class EditarEmpresa extends AppCompatActivity {
         }
 
         try{
-            String id = cajaId.getText().toString();
             String nombre = cajaNombre.getText().toString();
             String nombrePropietario = cajaNombrePropietario.getText().toString();
             String dni = cajaDni.getText().toString();
@@ -156,13 +163,12 @@ public class EditarEmpresa extends AppCompatActivity {
     public void eliminar(View v){
 
         SQLiteDatabase bd3 = null;
-        ContentValues valores = new ContentValues();
 
         try{
             ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bd_datos", null, 1);
             bd3 = con.getWritableDatabase();
         } catch(Exception e){
-            Toast.makeText(this, "Error al eliminar la empresa.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al cargar la base de datos.", Toast.LENGTH_SHORT).show();
             error = error + e;
         }
 
@@ -170,7 +176,7 @@ public class EditarEmpresa extends AppCompatActivity {
 
             String idEmpresaString = idEmpresa+"";
             String[] args = new String[] {idEmpresaString};
-            int cant = bd3.delete(Utilidades.tablaEmpresa, "id=?", args);
+            int cant = bd3.delete(Utilidades.tablaEmpresa, " " + Utilidades.campoIdEmpresa + "=?", args);
 
             bd3.close();
 
@@ -187,6 +193,10 @@ public class EditarEmpresa extends AppCompatActivity {
                 Toast.makeText(this, "Se eliminó la empresa correctamente", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "No se pudó eliminar la empresa", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(v.getContext(), EditarEmpresa.class);
+                intent.putExtra("idEmpresa", idEmpresa);
+                startActivityForResult(intent, 0);
             }
 
             Intent intent = new Intent(v.getContext(), MainActivity.class);

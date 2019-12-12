@@ -58,8 +58,8 @@ public class NuevaEmpresa extends AppCompatActivity {
             String nombrePropietario = cajaNombrePropietario.getText().toString();
             String dni = cajaDni.getText().toString();
             String telefono = cajaTelefono.getText().toString();
-            String direccion = cajaTelefono.getText().toString();
-            String nombreUsuario = cajaTelefono.getText().toString();
+            String direccion = cajaDireccion.getText().toString();
+            String nombreUsuario = cajaNombreUsuario.getText().toString();
             String contrasena = cajaContrasena.getText().toString();
 
             valores = new ContentValues();
@@ -117,7 +117,7 @@ public class NuevaEmpresa extends AppCompatActivity {
         cajaNombreUsuario.setText("");
         cajaContrasena.setText("");
 
-        txtError.setText(error);
+        //txtError.setText(error);
 
         if(idEmpresa == -1 || idEmpresa == 0){
             Toast.makeText(this, "Error al crear la empresa.", Toast.LENGTH_SHORT).show();
