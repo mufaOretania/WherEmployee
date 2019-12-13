@@ -87,7 +87,7 @@ public class EditarEmpresa extends AppCompatActivity {
     }
 
     public void cancelar(View v){
-        Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
+        Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
         intent.putExtra("idEmpresa", idEmpresa);
         startActivityForResult(intent, 0);
     }

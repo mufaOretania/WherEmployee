@@ -52,6 +52,17 @@
             android:textStyle="bold"
             tools:ignore="HardcodedText,UnusedAttribute" />
 
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#80D8FF"
+            android:layout_marginBottom="32dp"
+            android:onClick="cerrarSesion"
+            android:text="Cerrar sesión"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,UnusedAttribute" />
+
         <TextView
             android:id="@+id/txtEmpleados"
             android:layout_width="wrap_content"
@@ -82,17 +93,6 @@
                             tools:ignore="HardcodedText,UnusedAttribute" />
                     </LinearLayout>
                 </ScrollView>
-
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#80D8FF"
-            android:layout_marginBottom="32dp"
-            android:onClick="cerrarSesion"
-            android:text="Cerrar sesión"
-            android:textStyle="bold"
-            tools:ignore="HardcodedText,UnusedAttribute" />
 
     </LinearLayout>
 

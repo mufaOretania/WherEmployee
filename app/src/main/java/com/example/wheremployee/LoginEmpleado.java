@@ -78,17 +78,22 @@ public class LoginEmpleado extends AppCompatActivity {
                 if (fila.moveToFirst()){
                     idEmpleadoLogin = (long) fila.getInt(0);
                     Toast.makeText(this, "Iniciando sesión. Id: " + idEmpleadoLogin, Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
+                    intent.putExtra("idEmpleado", idEmpleadoLogin);
+                    startActivityForResult(intent, 0);
                 }
             }catch(Exception e){
-                Toast.makeText(this, "No se encontró ninguna empresa con ese usuario y contraseña.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No se encontró ningún empleado con ese usuario y contraseña.", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent (v.getContext(), LoginEmpleado.class);
+                startActivityForResult(intent, 0);
             }
 
             fila.close();
             bd.close();
 
-            Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
-            intent.putExtra("idEmpleado", idEmpleadoLogin);
-            startActivityForResult(intent, 0);
+
         } catch (Exception e) {
             Toast.makeText(this, "No se encontro ningún empleado con ese nombre de usuario y contraseña.", Toast.LENGTH_SHORT).show();
             error = error + e;
