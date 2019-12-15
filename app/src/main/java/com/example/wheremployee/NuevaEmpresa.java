@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class NuevaEmpresa extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
-    public void crearEmpresa(View v){
+    public void crearEmpresa(View v) throws InterruptedException {
 
         ContentValues valores = null;
         SQLiteDatabase bd = null;
@@ -91,11 +92,11 @@ public class NuevaEmpresa extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
 
-            Toast.makeText(this, "BIEN - Datos capturados.", Toast.LENGTH_SHORT).show();
-
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los campos.", Toast.LENGTH_SHORT).show();
             error = error + e;
+
+            Thread.sleep(3000);
 
             Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
             startActivityForResult(intent, 0);
@@ -122,10 +123,14 @@ public class NuevaEmpresa extends AppCompatActivity {
         if(idEmpresa == -1 || idEmpresa == 0){
             Toast.makeText(this, "Error al crear la empresa.", Toast.LENGTH_SHORT).show();
 
+            Thread.sleep(3000);
+
             Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
             startActivityForResult(intent, 0);
         } else {
             Toast.makeText(this, "Genial, se ha creado su empresa con id: "+ idEmpresa +".", Toast.LENGTH_SHORT).show();
+
+            Thread.sleep(3000);
 
             Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
             intent.putExtra("idEmpresa", idEmpresa);

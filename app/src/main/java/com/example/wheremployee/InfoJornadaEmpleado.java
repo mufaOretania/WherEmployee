@@ -51,8 +51,9 @@ public class InfoJornadaEmpleado extends AppCompatActivity {
 
         Bundle datos = this.getIntent().getExtras();
         if(datos != null){
-            idEmpleado = datos.getLong("idEmpleado");
             idEmpresa = datos.getLong("idEmpresa");
+            idEmpleado = datos.getLong("idEmpleado");
+
             String idJornadaString = null;
 
             SQLiteDatabase bd = null;

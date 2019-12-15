@@ -70,11 +70,11 @@ public class NuevosEmpleados extends AppCompatActivity {
                 llEmpleados.addView(tvAñadirEmpleados);
                 while(filaEmpl.moveToNext()){
                     TextView tvAñadirEmpleados2 = new TextView(getApplicationContext());
-                    tvAñadirEmpleados.setText(filaEmpl.getString(1));
-                    llEmpleados.addView(tvAñadirEmpleados);
+                    tvAñadirEmpleados2.setText(filaEmpl.getString(0));
+                    llEmpleados.addView(tvAñadirEmpleados2);
                 }
             } else {
-                Toast.makeText(this, "No se encontró ningún empleado de esta empresa.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Comienza a crear empleados.", Toast.LENGTH_SHORT).show();
             }
 
             filaEmpl.close();
@@ -92,13 +92,13 @@ public class NuevosEmpleados extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
-    public void anadirEmpleado(View v){
+    public void anadirEmpleado(View v) throws InterruptedException {
 
         long idEmpleado = 0;
         String nombreEmpleado = null;
 
-        ContentValues valores = null;
         SQLiteDatabase bd = null;
+        ContentValues valores = null;
 
         try{
             ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
@@ -158,6 +158,8 @@ public class NuevosEmpleados extends AppCompatActivity {
             Toast.makeText(this, "Error al capturar los datos de los empleados.", Toast.LENGTH_SHORT).show();
             error = error + e;
 
+            Thread.sleep(3000);
+
             Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
@@ -180,6 +182,8 @@ public class NuevosEmpleados extends AppCompatActivity {
         if(idEmpleado == -1 || idEmpleado == 0){
             Toast.makeText(this, "Error al crear el empleado.", Toast.LENGTH_SHORT).show();
 
+            Thread.sleep(3000);
+
             Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
@@ -190,6 +194,8 @@ public class NuevosEmpleados extends AppCompatActivity {
             llEmpleados.addView(tvAñadir);
 
             Toast.makeText(this, "Genial, se ha creado su empleado con id: "+ idEmpleado +". Cree más empleados o termina la empresa", Toast.LENGTH_SHORT).show();
+
+            Thread.sleep(3000);
 
             Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
             intent.putExtra("idEmpresa", idEmpresa);

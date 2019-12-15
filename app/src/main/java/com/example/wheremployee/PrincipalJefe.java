@@ -91,13 +91,14 @@ public class PrincipalJefe extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent (v.getContext(), InfoJornadaEmpleado.class);
+                        intent.putExtra("idEmpresa", idEmpresa);
                         intent.putExtra("idEmpleado", idEmpleado);
                         startActivityForResult(intent, 0);
                     }
                 });
                 tvAñadirEmpleados.setText(filaEmpl.getString(1));
-
                 ll.addView(tvAñadirEmpleados);
+
                 while(filaEmpl.moveToNext()){
                     TextView tvAñadirEmpleados2 = new TextView(getApplicationContext());
                     idEmpleado = filaEmpl.getInt(0);
@@ -110,9 +111,9 @@ public class PrincipalJefe extends AppCompatActivity {
                             startActivityForResult(intent, 0);
                         }
                     });
-                    tvAñadirEmpleados.setText(filaEmpl.getString(1));
 
-                    ll.addView(tvAñadirEmpleados);
+                    tvAñadirEmpleados2.setText(filaEmpl.getString(1));
+                    ll.addView(tvAñadirEmpleados2);
                 }
             } else {
                 Toast.makeText(this, "No se encontró ningún empleado de esta empresa.", Toast.LENGTH_SHORT).show();
