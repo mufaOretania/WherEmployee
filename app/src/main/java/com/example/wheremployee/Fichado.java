@@ -54,6 +54,8 @@ public class Fichado extends AppCompatActivity {
 
         txtError = (TextView) findViewById(R.id.txtError);
 
+        ActivityCompat.requestPermissions(Fichado.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
         Bundle datos = this.getIntent().getExtras();
         if(datos != null) {
             idEmpleado = datos.getLong("idEmpleado");
@@ -70,7 +72,6 @@ public class Fichado extends AppCompatActivity {
 
         //Todo esto se tiene que hacer hasta que el botón finalizar jornada sea activado.
         try{
-            ActivityCompat.requestPermissions(Fichado.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 latitud = 0;
                 longitud = 0;
@@ -97,7 +98,7 @@ public class Fichado extends AppCompatActivity {
                     valores.put(Utilidades.campolatitud, latitud);
                     valores.put(Utilidades.campolongitud, longitud);
                     valores.put(Utilidades.campoEmpleadoCoor, (int) idEmpleado);
-                    valores.put(Utilidades.campoEmpleadoCoor, "null");
+                    valores.put(Utilidades.campoJornada, "null");
                 } catch(Exception e){
                     Toast.makeText(this, "Error al cargar los datos.", Toast.LENGTH_SHORT).show();
                     error = error + e;
@@ -171,6 +172,7 @@ public class Fichado extends AppCompatActivity {
             Toast.makeText(this, "Error al crear la jornada.", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent (v.getContext(), PrincipalEmpleado.class);
+            intent.putExtra("idEmpleado", idEmpleado);
             startActivityForResult(intent, 0);
         } else {
             Toast.makeText(this, "Genial, se ha creado su jornada con id: "+ idJornada +".", Toast.LENGTH_SHORT).show();
@@ -185,12 +187,10 @@ public class Fichado extends AppCompatActivity {
         for(int i=0; i<coordenadas.size();i++){
 
             SQLiteDatabase bd2 = null;
-            String user = null;
-            String pass = null;
 
             try{
                 ConexionSqlLiteHelper con = new ConexionSqlLiteHelper(this, "bbddWherEmployee", null, 1);
-                bd = con.getReadableDatabase();
+                bd2 = con.getReadableDatabase();
             } catch(Exception e){
                 Toast.makeText(this, "Error al enlazarse con la base de datos.", Toast.LENGTH_SHORT).show();
                 error = error + e;
@@ -202,7 +202,7 @@ public class Fichado extends AppCompatActivity {
                 String[] camposDevueltos = new String[] {Utilidades.campolatitud, Utilidades.campolongitud};
 
                 //String consulta = "SELECT id FROM "+ Utilidades.tablaEmpresa +" WHERE "+Utilidades.campoUsuario+"=? and "+Utilidades.campoContrasena+"=?";
-                Cursor fila = bd.query(Utilidades.tablaCoordenada, camposDevueltos, Utilidades.campoIdCoor+"=?" , args, null, null, null);
+                Cursor fila = bd2.query(Utilidades.tablaCoordenada, camposDevueltos, Utilidades.campoIdCoor+"=?" , args, null, null, null);
 
                 try{
                     if (fila.moveToFirst()){
@@ -219,7 +219,7 @@ public class Fichado extends AppCompatActivity {
                 Toast.makeText(this, "No se pudo capturar ni la latitud ni la longitud..", Toast.LENGTH_SHORT).show();
                 error = error + e;
 
-                Intent intent = new Intent (v.getContext(), LoginJefe.class);
+                Intent intent = new Intent (v.getContext(), Fichado.class);
                 intent.putExtra("idEmpleado", idEmpleado);
                 startActivityForResult(intent, 0);
             }
@@ -242,7 +242,7 @@ public class Fichado extends AppCompatActivity {
                 valores2.put(Utilidades.campolatitud, latitud2);
                 valores2.put(Utilidades.campolongitud, longitud2);
                 valores2.put(Utilidades.campoEmpleadoCoor, (int) idEmpleado);
-                valores2.put(Utilidades.campoEmpleadoCoor, (int) idJornada);
+                valores2.put(Utilidades.campoJornada, (int) idJornada);
 
             } catch (Exception e) {
                 Toast.makeText(this, "Error al capturar los datos.", Toast.LENGTH_SHORT).show();
@@ -257,19 +257,23 @@ public class Fichado extends AppCompatActivity {
 
                 String idStringCoordenada = idCoordenada+"";
                 String[] args = new String[] {idStringCoordenada};
-                int cant = bd2.update(Utilidades.tablaCoordenada, valores, " " + Utilidades.campoIdCoor + "=?", args);
+                int cant = bd3.update(Utilidades.tablaCoordenada, valores2, " " + Utilidades.campoIdCoor + "=?", args);
 
                 bd2.close();
 
                 if (cant == 1) {
-                    Toast.makeText(this, "Se modificaron los datos de la empresa", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Error. Imposible actualizar los datos de la coordenada.", Toast.LENGTH_SHORT).show();
-                }
+                    Toast.makeText(this, "Se modificaron los datos de la coordenadas correctamente", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
-                intent.putExtra("idEmpleado", idEmpleado);
-                startActivityForResult(intent, 0);
+                    Intent intent = new Intent(v.getContext(), PrincipalEmpleado.class);
+                    intent.putExtra("idEmpleado", idEmpleado);
+                    startActivityForResult(intent, 0);
+                } else {
+                    Toast.makeText(this, "Error. Imposible actualizar los datos de la coordenadas.", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(v.getContext(), Fichado.class);
+                    intent.putExtra("idEmpleado", idEmpleado);
+                    startActivityForResult(intent, 0);
+                }
 
             } catch( Exception e) {
                 Toast.makeText(this, "Se produjo un error al editar los datos de la coordenada", Toast.LENGTH_SHORT).show();

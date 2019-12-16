@@ -50,7 +50,7 @@
             android:backgroundTint="#80D8FF"
             android:onClick="editarEmpleado"
             android:padding="32dp"
-            android:text="Actualizar datos personales"
+            android:text="Editar datos personales"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 

@@ -53,6 +53,17 @@
             tools:ignore="HardcodedText,UnusedAttribute" />
 
         <Button
+            android:id="@+id/btnNuevosEmpleados"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#80D8FF"
+            android:layout_marginBottom="32dp"
+            android:onClick="nuevosEmpleados"
+            android:text="Añadir nuevos empleados"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,UnusedAttribute" />
+
+        <Button
             android:id="@+id/btnCerrarSesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

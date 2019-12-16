@@ -23,8 +23,6 @@ public class Utilidades {
             ""+campoUsuario+" TEXT NOT NULL," +
             ""+campoContrasena+" TEXT NOT NULL)";
 
-    public static final String mufaSL =  "INSERT INTO empresa( id, nombreEmp, nombrePropietario, dniPropietario, telefono, direccion, usuarioJefe, contrasena) VALUES ('1', 'Mufasa SL', 'Mufasa', '26262626X', '666666666', 'Los casas, 8', 'mufa', 'mufa' );";
-
 
     //Valores constantes de la tabla Empleado
     public static final String tablaEmpleado = "empleado";

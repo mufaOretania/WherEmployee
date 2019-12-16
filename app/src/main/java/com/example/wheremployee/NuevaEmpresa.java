@@ -63,6 +63,36 @@ public class NuevaEmpresa extends AppCompatActivity {
             String nombreUsuario = cajaNombreUsuario.getText().toString();
             String contrasena = cajaContrasena.getText().toString();
 
+            if(nombre=="" || nombrePropietario=="" || dni=="" || telefono=="" || direccion=="" || nombreUsuario=="" || contrasena==""){
+                Toast.makeText(this, "Algún campo se encuentra vacío, rellene los campos correctamente.", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+                intent.putExtra("idEmpresa", idEmpresa);
+                startActivityForResult(intent, 0);
+            } else{
+                Toast.makeText(this, "Obteniendo campos.", Toast.LENGTH_SHORT).show();
+            }
+
+            if(validarDni(dni)){
+                Toast.makeText(this, "Dni válido.", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Dni no válido, introduce un dni válido.", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
+                intent.putExtra("idEmpresa", idEmpresa);
+                startActivityForResult(intent, 0);
+            }
+
+            if(validarTelefono(telefono)){
+                Toast.makeText(this, "Teléfono válido.", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Teléfono no válido, introduce un teléfono válido.", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
+                intent.putExtra("idEmpresa", idEmpresa);
+                startActivityForResult(intent, 0);
+            }
+
             valores = new ContentValues();
             valores.put(Utilidades.campoNombreEmp, nombre);
             valores.put(Utilidades.campoNombreProp, nombrePropietario);
@@ -72,31 +102,10 @@ public class NuevaEmpresa extends AppCompatActivity {
             valores.put(Utilidades.campoUsuario, nombreUsuario);
             valores.put(Utilidades.campoContrasena, contrasena);
 
-            try{
-                validarDni(dni);
-            }catch (Exception e){
-                Toast.makeText(this, "Dni no válido, introduce un dni válido.", Toast.LENGTH_SHORT).show();
-                error = error + e;
-
-                Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
-                startActivityForResult(intent, 0);
-            }
-
-            try{
-                validarTelefono(telefono);
-            }catch (Exception e){
-                Toast.makeText(this, "Teléfono no válido, introduce un teléfono válido.", Toast.LENGTH_SHORT).show();
-                error = error + e;
-
-                Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
-                startActivityForResult(intent, 0);
-            }
 
         } catch (Exception e){
             Toast.makeText(this, "Error al capturar los datos de los campos.", Toast.LENGTH_SHORT).show();
             error = error + e;
-
-            Thread.sleep(3000);
 
             Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
             startActivityForResult(intent, 0);
@@ -123,14 +132,10 @@ public class NuevaEmpresa extends AppCompatActivity {
         if(idEmpresa == -1 || idEmpresa == 0){
             Toast.makeText(this, "Error al crear la empresa.", Toast.LENGTH_SHORT).show();
 
-            Thread.sleep(3000);
-
             Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
             startActivityForResult(intent, 0);
         } else {
             Toast.makeText(this, "Genial, se ha creado su empresa con id: "+ idEmpresa +".", Toast.LENGTH_SHORT).show();
-
-            Thread.sleep(3000);
 
             Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
             intent.putExtra("idEmpresa", idEmpresa);
@@ -141,13 +146,13 @@ public class NuevaEmpresa extends AppCompatActivity {
 
     public boolean validarDni(String dni){
 
-        boolean result = false;
+        boolean result = true;
 
         String letraMayuscula = ""; //Guardaremos la letra introducida en formato mayúscula
 
         // Aquí excluimos cadenas distintas a 9 caracteres que debe tener un dni y también si el último caracter no es una letra
-        if(dni.length() == 9 || Character.isLetter(dni.charAt(8))) {
-            result = true;
+        if(dni.length() != 9 || !Character.isLetter(dni.charAt(8))) {
+            result = false;
         }
 
         // Al superar la primera restricción, la letra la pasamos a mayúscula
@@ -155,8 +160,8 @@ public class NuevaEmpresa extends AppCompatActivity {
 
         // Por último validamos que sólo tengo 8 dígitos entre los 8 primeros caracteres y que la letra introducida es igual a la de la ecuación
         // Llamamos a los métodos privados de la clase soloNumeros() y letraDNI()
-        if(soloNumeros(dni) && letraDNI(dni).equals(letraMayuscula)) {
-            result = true;
+        if(!soloNumeros(dni) && !letraDNI(dni).equals(letraMayuscula)) {
+            result = false;
         }
 
         return result;
@@ -181,12 +186,7 @@ public class NuevaEmpresa extends AppCompatActivity {
             }
         }
 
-        if(miDNI.length() != 8) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return miDNI.length() == 8;
     }
 
     private String letraDNI(String dni) {

@@ -1,6 +1,7 @@
 package com.example.wheremployee;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.wheremployee.utilidades.Utilidades;
 
-public class NuevosEmpleados extends AppCompatActivity {
+public class NuevosEmpleadosEditar extends AppCompatActivity {
 
     private EditText cajaNombre, cajaDni, cajaTelefono, cajaDireccion, cajaNombreUsuario, cajaContrasena;
     private LinearLayout llEmpleados;
@@ -27,7 +28,7 @@ public class NuevosEmpleados extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nuevos_empleados);
+        setContentView(R.layout.activity_nuevos_empleados_editar);
 
         txtError = (TextView) findViewById(R.id.txtError);
         cajaNombre = (EditText) findViewById(R.id.cajaNombre);
@@ -88,7 +89,8 @@ public class NuevosEmpleados extends AppCompatActivity {
     }
 
     public void atras(View v){
-        Intent intent = new Intent (v.getContext(), NuevaEmpresa.class);
+        Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
+        intent.putExtra("idEmpresa", idEmpresa);
         startActivityForResult(intent, 0);
     }
 
@@ -122,7 +124,7 @@ public class NuevosEmpleados extends AppCompatActivity {
             if(nombre=="" || dni=="" || telefono=="" || direccion=="" || nombreUsuario=="" || contrasena==""){
                 Toast.makeText(this, "Algún campo se encuentra vacío, rellene los campos correctamente.", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+                Intent intent = new Intent (v.getContext(), NuevosEmpleadosEditar.class);
                 intent.putExtra("idEmpresa", idEmpresa);
                 startActivityForResult(intent, 0);
             } else{
@@ -134,7 +136,7 @@ public class NuevosEmpleados extends AppCompatActivity {
             }else {
                 Toast.makeText(this, "Dni no válido, introduce un dni válido.", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+                Intent intent = new Intent (v.getContext(), NuevosEmpleadosEditar.class);
                 intent.putExtra("idEmpresa", idEmpresa);
                 startActivityForResult(intent, 0);
             }
@@ -144,7 +146,7 @@ public class NuevosEmpleados extends AppCompatActivity {
             }else {
                 Toast.makeText(this, "Teléfono no válido, introduce un teléfono válido.", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+                Intent intent = new Intent (v.getContext(), NuevosEmpleadosEditar.class);
                 intent.putExtra("idEmpresa", idEmpresa);
                 startActivityForResult(intent, 0);
             }
@@ -165,7 +167,7 @@ public class NuevosEmpleados extends AppCompatActivity {
             Toast.makeText(this, "Error al capturar los datos de los empleados.", Toast.LENGTH_SHORT).show();
             error = error + e;
 
-            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            Intent intent = new Intent (v.getContext(), NuevosEmpleadosEditar.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         }
@@ -189,7 +191,7 @@ public class NuevosEmpleados extends AppCompatActivity {
         if(idEmpleado == -1 || idEmpleado == 0){
             Toast.makeText(this, "Error al crear el empleado.", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            Intent intent = new Intent (v.getContext(), NuevosEmpleadosEditar.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         } else {
@@ -200,7 +202,7 @@ public class NuevosEmpleados extends AppCompatActivity {
 
             Toast.makeText(this, "Genial, se ha creado su empleado con id: "+ idEmpleado +". Cree más empleados o termina la empresa", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent (v.getContext(), NuevosEmpleados.class);
+            Intent intent = new Intent (v.getContext(), NuevosEmpleadosEditar.class);
             intent.putExtra("idEmpresa", idEmpresa);
             startActivityForResult(intent, 0);
         }
@@ -208,7 +210,7 @@ public class NuevosEmpleados extends AppCompatActivity {
     }
 
     public void terminarEmpresa(View v){
-        Intent intent = new Intent (v.getContext(), LoginJefe.class);
+        Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
         intent.putExtra("idEmpresa", idEmpresa);
         startActivityForResult(intent, 0);
     }

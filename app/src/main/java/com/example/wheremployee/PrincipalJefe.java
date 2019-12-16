@@ -135,6 +135,12 @@ public class PrincipalJefe extends AppCompatActivity {
         startActivityForResult(intent, 0);
     }
 
+    public void nuevosEmpleados(View v){
+        Intent intent = new Intent (v.getContext(), NuevosEmpleadosEditar.class);
+        intent.putExtra("idEmpresa", idEmpresa);
+        startActivityForResult(intent, 0);
+    }
+
     public void cerrarSesion(View v){
         Intent intent = new Intent (v.getContext(), LoginJefe.class);
         intent.putExtra("idEmpresa", idEmpresa);

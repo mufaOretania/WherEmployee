@@ -126,6 +126,8 @@ public class LoginJefe extends AppCompatActivity {
                     Intent intent = new Intent (v.getContext(), PrincipalJefe.class);
                     intent.putExtra("idEmpresa", idEmpresaLogin);
                     startActivityForResult(intent, 0);
+                } else {
+                    Toast.makeText(this, "No se encontró ninguna empresa con ese usuario y contraseña.", Toast.LENGTH_SHORT).show();
                 }
             }catch(Exception e){
                 Toast.makeText(this, "No se encontró ninguna empresa con ese usuario y contraseña.", Toast.LENGTH_SHORT).show();
